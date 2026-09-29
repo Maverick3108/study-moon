@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Study Moon</title>
+<meta name="description" content="Daily plan, tracker, timetable and focus timer for the IITM qualifier.">
+<meta name="theme-color" content="#1C2046">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Study Moon">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --night:#1C2046; --night2:#252A58; --night3:#2F3569;
+  --line:rgba(237,230,211,.13); --line2:rgba(237,230,211,.24);
+  --moon:#EDE6D3; --dim:#AEAAC6; --faint:#7F7CA3;
+  --ct:#B7A7E8; --m:#8FB8F0; --s:#F0B38F; --e:#A9CFA0; --ca:#E8C170; --mock:#E9A2AB; --done:#86CDBF;
+  --serif:"Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --sans:"Karla", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100vh;color:var(--moon);font-family:var(--sans);font-size:16px;line-height:1.5;
+  background-color:var(--night);
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(1px 1px at 72% 9%, rgba(255,255,255,.45), transparent 60%),
+    radial-gradient(1.5px 1.5px at 88% 34%, rgba(255,255,255,.5), transparent 60%),
+    radial-gradient(1px 1px at 33% 62%, rgba(255,255,255,.35), transparent 60%),
+    radial-gradient(1px 1px at 55% 28%, rgba(255,255,255,.4), transparent 60%),
+    radial-gradient(1.5px 1.5px at 8% 82%, rgba(255,255,255,.35), transparent 60%),
+    radial-gradient(1px 1px at 93% 76%, rgba(255,255,255,.4), transparent 60%),
+    radial-gradient(900px 500px at 85% -10%, rgba(183,167,232,.16), transparent 70%);
+  background-attachment:fixed;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ct);outline-offset:2px;border-radius:6px}
+.wrap{max-width:980px;margin:0 auto;padding:20px 18px 110px}
+@media(min-width:760px){.wrap{padding:28px 28px 60px}}
+
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.brand{font-family:var(--serif);font-size:1.45rem;font-weight:600;letter-spacing:.01em}
+.brand small{display:block;font-family:var(--sans);font-size:.78rem;color:var(--dim);font-weight:500;letter-spacing:0}
+nav.tabs{display:flex;gap:4px}
+nav.tabs button{background:none;border:0;padding:8px 14px;border-radius:999px;color:var(--dim);font-weight:600;font-size:.93rem}
+nav.tabs button[aria-current="page"]{background:var(--night3);color:var(--moon)}
+nav.tabs button svg{display:none}
+@media(max-width:759px){
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;justify-content:space-around;background:rgba(28,32,70,.94);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);
+    padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
+  nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;padding:6px 8px;border-radius:12px;flex:1}
+  nav.tabs button svg{display:block;width:22px;height:22px}
+  nav.tabs button[aria-current="page"]{background:none;color:var(--ct)}
+}
+
+section.view{display:none}
+section.view.on{display:block}
+h2{font-family:var(--serif);font-weight:600;font-size:1.7rem;line-height:1.15;margin:0 0 6px}
+h3{font-family:var(--serif);font-weight:600;font-size:1.35rem;margin:0 0 10px}
+p{margin:0 0 10px}
+.muted{color:var(--dim)}
+.panel{background:rgba(37,42,88,.72);border:1px solid var(--line);border-radius:18px;padding:18px}
+.grid2{display:grid;gap:16px}
+@media(min-width:860px){.grid2{grid-template-columns:1.25fr 1fr}}
+.stack>*+*{margin-top:16px}
+
+/* hero */
+.hero{display:grid;gap:10px 28px;align-items:center;padding:6px 0 22px}
+@media(min-width:600px){.hero{grid-template-columns:230px 1fr}}
+.moonbox{width:200px;height:200px;margin:0 auto;position:relative}
+@media(min-width:600px){.moonbox{width:230px;height:230px}}
+.moonbox svg{width:100%;height:100%;overflow:visible}
+.moonpct{position:absolute;inset:auto 0 -6px 0;text-align:center;font-size:.8rem;color:var(--dim)}
+.hello{font-size:1rem;color:var(--dim);margin-bottom:2px}
+.count{font-family:var(--serif);font-size:clamp(2.6rem,8vw,4.2rem);line-height:1;font-weight:600;margin:0 0 8px}
+.count span{font-size:.42em;font-weight:500;color:var(--dim);display:block;margin-top:6px;line-height:1.25}
+.statline{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pill{border:1px solid var(--line2);border-radius:999px;padding:5px 12px;font-size:.86rem;color:var(--moon);background:rgba(28,32,70,.4)}
+.pill b{font-weight:700}
+
+/* day header */
+.dayhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.dayhead .kind{display:inline-block;font-size:.8rem;font-weight:700;border-radius:999px;padding:3px 10px;margin-top:6px;color:#1C2046}
+.navbtns{display:flex;gap:6px;flex-shrink:0}
+.iconbtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line2);background:transparent;display:grid;place-items:center}
+.iconbtn:hover{background:var(--night3)}
+.linkbtn{background:none;border:0;color:var(--ct);font-weight:600;padding:0;font-size:.9rem;text-decoration:underline;text-underline-offset:3px}
+
+/* tasks */
+.task{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 4px;border-top:1px solid var(--line)}
+.task:first-of-type{border-top:0}
+.task input{position:absolute;opacity:0;width:1px;height:1px}
+.box{width:26px;height:26px;border-radius:8px;border:2px solid var(--c,var(--ct));display:grid;place-items:center;transition:background .15s}
+.box svg{width:16px;height:16px;opacity:0;stroke:#1C2046}
+.task input:checked + .box{background:var(--c)}
+.task input:checked + .box svg{opacity:1}
+.task input:focus-visible + .box{outline:2px solid var(--moon);outline-offset:2px}
+.task .subj{font-size:.78rem;font-weight:700;color:var(--c)}
+.task .topic{font-size:1rem;line-height:1.35}
+.task.isdone .topic{color:var(--faint);text-decoration:line-through;text-decoration-color:rgba(237,230,211,.3)}
+.task .mins{font-size:.82rem;color:var(--dim);white-space:nowrap}
+.task label{display:contents;cursor:pointer}
+.groupl{font-size:.82rem;color:var(--dim);margin:16px 0 2px;font-weight:600}
+.daybar{height:6px;border-radius:6px;background:rgba(237,230,211,.1);overflow:hidden;margin:6px 0 4px}
+.daybar i{display:block;height:100%;background:var(--done);border-radius:6px;transition:width .3s}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:92px 1fr;gap:10px;padding:8px 10px;border-radius:12px;font-size:.93rem}
+.tl li .t{color:var(--dim);font-variant-numeric:tabular-nums;font-size:.85rem;padding-top:1px}
+.tl li.past{opacity:.45}
+.tl li.now{background:rgba(183,167,232,.16);box-shadow:inset 3px 0 0 var(--ct)}
+.tl li.now .t{color:var(--moon);font-weight:700}
+.tl .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;background:var(--c,var(--faint));vertical-align:middle}
+.nowcard{font-size:.95rem;margin-bottom:10px}
+.nowcard b{font-family:var(--serif);font-size:1.3rem;font-weight:600;display:block;line-height:1.2}
+
+/* nugget */
+.nugget{border-radius:18px;padding:20px 20px 18px;background:linear-gradient(160deg,rgba(183,167,232,.22),rgba(143,184,240,.08));border:1px solid rgba(183,167,232,.3)}
+.nugget q{font-family:var(--serif);font-size:1.4rem;line-height:1.3;display:block;quotes:none;font-style:italic}
+.nugget .by{font-size:.82rem;color:var(--dim);margin-top:10px}
+textarea,input[type=text],select{width:100%;background:rgba(28,32,70,.55);border:1px solid var(--line2);border-radius:12px;padding:10px 12px;color:var(--moon)}
+textarea{min-height:76px;resize:vertical}
+.saved{font-size:.8rem;color:var(--done);height:1em;margin-top:4px}
+
+/* plan */
+.subjbars{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:22px}
+.sb .n{font-size:.85rem;font-weight:700;color:var(--c)}
+.sb .v{font-size:.8rem;color:var(--dim)}
+.sb .daybar i{background:var(--c)}
+.week{margin-bottom:22px}
+.week h3{margin-bottom:6px}
+.drow{width:100%;text-align:left;display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;background:none;border:0;border-top:1px solid var(--line);padding:11px 6px;border-radius:0}
+.drow:hover{background:rgba(237,230,211,.04)}
+.drow.today{background:rgba(183,167,232,.13);border-radius:12px;border-top-color:transparent}
+.drow .d{font-weight:700;line-height:1.1}
+.drow .d small{display:block;font-weight:500;color:var(--dim);font-size:.78rem}
+.drow .ph{font-size:.93rem}
+.drow .ph small{display:block;color:var(--dim);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
+.ring{width:34px;height:34px}
+.chip{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:1px}
+
+/* focus */
+.timer{display:grid;place-items:center;padding:10px 0}
+.timer svg{width:min(280px,72vw);height:auto}
+.timer .big{font-family:var(--serif);font-size:3.6rem;font-weight:600;font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0 16px}
+.chips button{border:1px solid var(--line2);background:transparent;border-radius:999px;padding:7px 14px;font-size:.9rem;font-weight:600}
+.chips button[aria-pressed="true"]{background:var(--c,var(--ct));color:#1C2046;border-color:transparent}
+.ctrls{display:flex;gap:10px;justify-content:center}
+.btn{border:0;border-radius:14px;padding:11px 22px;font-weight:700;background:var(--moon);color:#1C2046}
+.btn.ghost{background:transparent;color:var(--moon);border:1px solid var(--line2)}
+.btn.small{padding:8px 14px;font-size:.88rem;border-radius:11px}
+table.log{width:100%;border-collapse:collapse;font-size:.92rem}
+table.log td{padding:8px 4px;border-top:1px solid var(--line)}
+table.log td:last-child{text-align:right;color:var(--dim);font-variant-numeric:tabular-nums}
+
+/* notebook */
+.nbform{display:grid;gap:10px}
+@media(min-width:600px){.nbform .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
+.nbform .row>*+*{margin-top:10px}
+@media(min-width:600px){.nbform .row>*+*{margin-top:0}}
+.entry{border-top:1px solid var(--line);padding:12px 0}
+.entry .meta{font-size:.8rem;color:var(--dim);display:flex;justify-content:space-between;gap:10px}
+.entry .meta b{color:var(--c)}
+.entry p{margin:4px 0 0;white-space:pre-wrap}
+.entry .fix{color:var(--done)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px}
+.filters button{border:1px solid var(--line2);background:transparent;border-radius:999px;padding:5px 12px;font-size:.84rem}
+.filters button[aria-pressed="true"]{background:var(--night3);border-color:var(--ct)}
+.del{background:none;border:0;color:var(--faint);font-size:.8rem;padding:0;text-decoration:underline}
+
+/* tips */
+details{border-top:1px solid var(--line);padding:4px 0}
+details:first-of-type{border-top:0}
+summary{cursor:pointer;list-style:none;padding:12px 0;font-family:var(--serif);font-size:1.3rem;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--sans);font-size:1.3rem;color:var(--dim)}
+details[open] summary::after{content:"\2212"}
+details ul{margin:0 0 14px;padding-left:20px}
+details li{margin-bottom:8px;max-width:68ch}
+.callout{border-left:3px solid var(--ca);padding:10px 14px;background:rgba(232,193,112,.08);border-radius:0 12px 12px 0;margin:0 0 14px}
+
+.sdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:var(--faint)}
+.sdot.ok{background:var(--done)}.sdot.busy{background:var(--ca)}.sdot.err{background:var(--mock)}
+footer{margin-top:40px;text-align:center;color:var(--faint);font-size:.85rem;font-family:var(--serif);font-style:italic;font-size:1.05rem}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);opacity:0;background:var(--moon);color:#1C2046;padding:10px 18px;border-radius:12px;font-weight:600;font-size:.92rem;transition:.25s;pointer-events:none;z-index:40;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:760px){.toast{bottom:28px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- game layer ---------- */
+.sdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:var(--faint)}
+.sdot.ok{background:var(--done)}.sdot.busy{background:var(--ca)}.sdot.err{background:var(--mock)}
+@media(max-width:759px){nav.tabs button{padding:6px 2px;font-size:.68rem}}
+.lvl{margin-top:14px;max-width:420px}
+.lvl .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.lvl .name{font-family:var(--serif);font-size:1.35rem;font-weight:600}
+.lvl .xp{font-size:.85rem;color:var(--dim);font-variant-numeric:tabular-nums}
+.xpbar{height:10px;border-radius:10px;background:rgba(237,230,211,.1);overflow:hidden;margin-top:6px;border:1px solid var(--line)}
+.xpbar i{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,var(--ct),var(--ca));transition:width .6s}
+.xpchip{font-size:.72rem;font-weight:700;color:var(--ca);border:1px solid rgba(232,193,112,.4);border-radius:999px;padding:1px 7px;white-space:nowrap}
+.task .mins{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+
+/* quests */
+.quest{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.quest:first-of-type{border-top:0}
+.qicon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--line2);flex-shrink:0;font-size:.9rem}
+.quest.ok .qicon{background:var(--done);border-color:var(--done);color:#1C2046}
+.quest.ok .qt{color:var(--dim);text-decoration:line-through;text-decoration-color:rgba(237,230,211,.3)}
+.quest .qt{flex:1}
+
+/* timetable */
+.tt{list-style:none;margin:0 0 12px;padding:0}
+.tt li{display:grid;grid-template-columns:auto 64px 1fr auto;gap:10px;align-items:center;padding:9px 6px;border-top:1px solid var(--line);border-radius:10px}
+.tt li:first-child{border-top:0}
+.tt li.now{background:rgba(183,167,232,.16);box-shadow:inset 3px 0 0 var(--ct)}
+.tt li.done .tx{color:var(--faint);text-decoration:line-through;text-decoration-color:rgba(237,230,211,.3)}
+.tt .tm{font-size:.84rem;color:var(--dim);font-variant-numeric:tabular-nums}
+.tt .tx{line-height:1.35;word-break:break-word}
+.tt .tx .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.tt .cb{width:24px;height:24px;border-radius:7px;border:2px solid var(--c,var(--dim));background:transparent;display:grid;place-items:center;padding:0}
+.tt li.done .cb{background:var(--c,var(--dim))}
+.tt .cb svg{width:14px;height:14px;opacity:0;stroke:#1C2046}
+.tt li.done .cb svg{opacity:1}
+.tt .x{background:none;border:0;color:var(--faint);font-size:1.2rem;line-height:1;padding:4px 6px}
+.addrow{display:grid;grid-template-columns:110px 1fr;gap:8px}
+.addrow2{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}
+input[type=time]{background:rgba(28,32,70,.55);border:1px solid var(--line2);border-radius:12px;padding:9px 10px;color:var(--moon);color-scheme:dark;width:100%}
+.empty{border:1px dashed var(--line2);border-radius:14px;padding:16px;text-align:center;color:var(--dim);font-size:.92rem;margin-bottom:12px}
+
+/* trophies */
+.lvlbig{display:grid;gap:18px;align-items:center}
+@media(min-width:640px){.lvlbig{grid-template-columns:auto 1fr}}
+.lvlbig .num{font-family:var(--serif);font-size:4.4rem;line-height:1;font-weight:700;color:var(--ca);text-align:center;min-width:110px}
+.lvlbig .num small{display:block;font-family:var(--sans);font-size:.78rem;color:var(--dim);font-weight:600}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.badge{border:1px solid var(--line);border-radius:16px;padding:14px 12px;text-align:center;background:rgba(28,32,70,.35)}
+.badge .ic{font-size:1.9rem;line-height:1;display:block;margin-bottom:8px;filter:grayscale(1);opacity:.35}
+.badge .bn{font-weight:700;font-size:.95rem}
+.badge .bd{font-size:.8rem;color:var(--dim);margin-top:4px;line-height:1.35}
+.badge.got{border-color:rgba(232,193,112,.55);background:rgba(232,193,112,.08)}
+.badge.got .ic{filter:none;opacity:1}
+.rewards{list-style:none;margin:0;padding:0}
+.rewards li{display:flex;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.rewards li:first-child{border-top:0}
+.rewards .rl{font-weight:700;font-size:.82rem;min-width:66px;color:var(--ca)}
+.rewards li.lock{color:var(--faint)}
+.rewards li.lock .rl{color:var(--faint)}
+.xplist{margin:0;padding-left:20px}
+.xplist li{margin-bottom:6px}
+
+/* celebration */
+.sparkle{position:fixed;pointer-events:none;z-index:60;font-size:18px;color:var(--ca);animation:fly 1.6s ease-out forwards}
+@keyframes fly{0%{transform:translate(0,0) scale(.6);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1.1) rotate(160deg);opacity:0}}
+.levelup{position:fixed;inset:0;z-index:55;display:grid;place-items:center;background:rgba(20,22,52,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.levelup .card{background:var(--night2);border:1px solid rgba(232,193,112,.5);border-radius:22px;padding:28px 26px;text-align:center;max-width:340px;margin:20px}
+.levelup .big{font-family:var(--serif);font-size:2.4rem;font-weight:700;line-height:1.1;margin:6px 0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Study Moon<small><span id="syncDot" class="sdot"></span><span id="syncTxt">IITM Qualifier</span></small></div>
+    <nav class="tabs" aria-label="Sections">
+      <button data-view="today" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>Today</button>
+      <button data-view="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Plan</button>
+      <button data-view="focus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg>Focus</button>
+      <button data-view="trophies"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 14v4M8.5 20.5h7"/></svg>Trophies</button>
+      <button data-view="notebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3.5h11a1.5 1.5 0 0 1 1.5 1.5v14a1.5 1.5 0 0 1-1.5 1.5H6z"/><path d="M6 3.5v17M9.5 8h5.5M9.5 11.5h5.5"/></svg>Notebook</button>
+      <button data-view="tips"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l2.4 5.3 5.6.6-4.2 3.8 1.2 5.6L12 15.5l-5 2.8 1.2-5.6L4 8.9l5.6-.6z"/></svg>Tips</button>
+    </nav>
+  </header>
+
+  <!-- TODAY -->
+  <section class="view on" id="view-today">
+    <div class="hero">
+      <div class="moonbox">
+        <svg viewBox="0 0 240 240" role="img" aria-labelledby="moonTitle">
+          <title id="moonTitle">Moon showing overall progress</title>
+          <defs>
+            <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="60%" stop-color="#EDE6D3" stop-opacity=".22"/><stop offset="100%" stop-color="#EDE6D3" stop-opacity="0"/></radialGradient>
+            <radialGradient id="lit" cx="60%" cy="40%" r="75%"><stop offset="0%" stop-color="#FBF6E8"/><stop offset="100%" stop-color="#D9D0B8"/></radialGradient>
+          </defs>
+          <circle cx="120" cy="120" r="118" fill="url(#glow)" id="moonGlow"/>
+          <circle cx="120" cy="120" r="86" fill="#2F3569" stroke="rgba(237,230,211,.25)"/>
+          <path id="moonLit" fill="url(#lit)" d=""/>
+          <g fill="#1C2046" opacity=".09"><circle cx="95" cy="92" r="12"/><circle cx="140" cy="140" r="17"/><circle cx="150" cy="86" r="7"/><circle cx="100" cy="150" r="8"/></g>
+        </svg>
+        <div class="moonpct" id="moonPct"></div>
+      </div>
+      <div>
+        <div class="hello" id="hello"></div>
+        <div class="count" id="count"></div>
+        <p class="muted" style="max-width:46ch">Every task you finish fills the moon and earns XP. See it full by exam day.</p>
+        <div class="statline" id="stats"></div>
+        <div class="lvl" id="lvlMini"></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="stack">
+        <div class="panel">
+          <div class="dayhead">
+            <div>
+              <h2 id="dayTitle"></h2>
+              <span class="kind" id="dayKind"></span>
+            </div>
+            <div class="navbtns">
+              <button class="iconbtn" id="prevDay" aria-label="Previous day"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
+              <button class="iconbtn" id="nextDay" aria-label="Next day"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></button>
+            </div>
+          </div>
+          <div id="backToday" style="margin:-4px 0 10px"></div>
+          <div class="daybar" aria-hidden="true"><i id="dayBar"></i></div>
+          <div class="muted" style="font-size:.85rem" id="dayFrac"></div>
+          <div id="taskList"></div>
+          <div id="dayNote"></div>
+        </div>
+        <div class="panel">
+          <div class="row" style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+            <h3>Daily quests</h3><span class="muted" style="font-size:.85rem" id="questFrac"></span>
+          </div>
+          <div id="quests"></div>
+        </div>
+        <div class="panel">
+          <h3>One line about today</h3>
+          <p class="muted" style="font-size:.9rem">What went well, or what to fix tomorrow. Worth 10 XP.</p>
+          <textarea id="reflect" aria-label="One line about today" placeholder="Nested loops finally clicked when I traced them in a table."></textarea>
+          <div class="saved" id="reflectSaved"></div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="nugget" id="nugget"></div>
+        <div class="panel">
+          <h3>My timetable</h3>
+          <p class="muted" style="font-size:.9rem">Your day, your way. Add anything with a time and it lines up as a timetable. Each finished item is 10 XP.</p>
+          <div class="nowcard" id="nowCard"></div>
+          <div id="ttWrap"></div>
+          <form id="ttForm" autocomplete="off">
+            <div class="addrow">
+              <input type="time" id="ttTime" aria-label="Time (optional)">
+              <input type="text" id="ttText" aria-label="What" placeholder="What's the plan?" maxlength="120">
+            </div>
+            <div class="addrow2">
+              <select id="ttTag" aria-label="Tag"></select>
+              <button class="btn small" type="submit">Add</button>
+            </div>
+          </form>
+          <div style="margin-top:12px"><button class="linkbtn" id="copyYest">Copy yesterday's timetable</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAN -->
+  <section class="view" id="view-plan">
+    <h2>The whole plan</h2>
+    <p class="muted" style="max-width:60ch">Four weeks of learning, then two weeks of revision and mocks. Tap any day to open it.</p>
+    <div class="panel" style="margin:16px 0 22px">
+      <h3>Progress by subject</h3>
+      <div class="subjbars" id="subjBars"></div>
+    </div>
+    <div id="weeks"></div>
+  </section>
+
+  <!-- FOCUS -->
+  <section class="view" id="view-focus">
+    <div class="grid2">
+      <div class="panel">
+        <h2>Focus timer</h2>
+        <p class="muted">Pick a session, phone face down, press start. Every finished session pays XP.</p>
+        <div class="chips" id="focusChips"></div>
+        <div class="timer">
+          <svg viewBox="0 0 280 280" aria-hidden="true">
+            <circle cx="140" cy="140" r="122" fill="none" stroke="rgba(237,230,211,.1)" stroke-width="10"/>
+            <circle id="ringFg" cx="140" cy="140" r="122" fill="none" stroke="var(--ct)" stroke-width="10" stroke-linecap="round" transform="rotate(-90 140 140)" stroke-dasharray="766.5" stroke-dashoffset="0"/>
+            <foreignObject x="40" y="90" width="200" height="110">
+              <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center">
+                <div class="big" id="timeLeft">60:00</div>
+                <div class="muted" id="timerLabel" style="font-size:.9rem"></div>
+              </div>
+            </foreignObject>
+          </svg>
+        </div>
+        <div class="ctrls">
+          <button class="btn" id="startBtn">Start</button>
+          <button class="btn ghost" id="resetBtn">Reset</button>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="panel">
+          <h3>Focused time</h3>
+          <table class="log" id="focusLog"></table>
+        </div>
+        <div class="panel">
+          <h3>Before you press start</h3>
+          <ul style="margin:0;padding-left:20px" class="muted">
+            <li>Phone in another room, or face down and on silent.</li>
+            <li>Water bottle within reach.</li>
+            <li>Write the one thing this session is for on a sticky note.</li>
+            <li>If your mind wanders, note the thought and come back. No guilt.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TROPHIES -->
+  <section class="view" id="view-trophies">
+    <div class="panel lvlbig" id="lvlBig"></div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="panel">
+        <h3>Badges</h3>
+        <p class="muted" id="badgeCount" style="font-size:.9rem"></p>
+        <div class="badges" id="badges"></div>
+      </div>
+      <div class="stack">
+        <div class="panel">
+          <h3>Level rewards</h3>
+          <p class="muted" style="font-size:.9rem">Reach the level, claim the reward. No exceptions.</p>
+          <ul class="rewards" id="rewards"></ul>
+        </div>
+        <div class="panel">
+          <h3>How to earn XP</h3>
+          <ul class="xplist muted">
+            <li>Plan tasks: 10 to 60 XP each, more for longer ones</li>
+            <li>Finish every plan task in a day: 50 XP bonus</li>
+            <li>Clear all three daily quests: 30 XP bonus</li>
+            <li>Focus sessions: 1 XP for every 2 minutes</li>
+            <li>Timetable items: 10 XP each, up to 10 a day</li>
+            <li>Notebook entries: 15 XP each, up to 5 a day</li>
+            <li>One line about today: 10 XP</li>
+            <li>Mocks: 160 XP each, plus 40 for the analysis</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTEBOOK -->
+  <section class="view" id="view-notebook">
+    <div class="grid2">
+      <div class="panel">
+        <h2>Mistake notebook</h2>
+        <p class="muted">Every wrong answer is a free lesson. Write it here once and you rarely make it twice. 15 XP per entry.</p>
+        <form class="nbform" id="nbForm">
+          <div class="row">
+            <select id="nbType" aria-label="Entry type">
+              <option value="mistake">Mistake</option>
+              <option value="formula">Formula</option>
+              <option value="insight">Insight</option>
+            </select>
+            <select id="nbSubj" aria-label="Subject"></select>
+          </div>
+          <textarea id="nbWhat" aria-label="What happened" placeholder="What went wrong, or the formula or idea"></textarea>
+          <textarea id="nbFix" aria-label="The fix" placeholder="The right way, in your own words (optional)" style="min-height:56px"></textarea>
+          <div><button class="btn small" type="submit">Save entry</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <h3>Backup</h3>
+        <p class="muted" style="font-size:.92rem">Your progress saves to the cloud automatically, even in private browsing. A backup file is still a nice safety net once a week.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn small" id="exportBtn">Download backup</button>
+          <label class="btn small ghost" style="cursor:pointer">Load backup<input type="file" id="importFile" accept="application/json" class="sr"></label>
+        </div>
+      </div>
+    </div>
+    <div class="filters" id="nbFilters"></div>
+    <div id="nbList"></div>
+  </section>
+
+  <!-- TIPS -->
+  <section class="view" id="view-tips">
+    <h2>Tips for the next six weeks</h2>
+    <p class="muted" style="max-width:60ch">Read the first one today. Come back to the rest whenever you need them.</p>
+    <div class="panel" style="margin-top:16px">
+      <details open>
+        <summary>The rule that matters most</summary>
+        <div class="callout">You only get to sit the qualifier if your weekly assignments are good enough. IITM takes the best 2 of the first 3 assignment scores in each subject, and you need an average of at least 40% in every one of the four subjects.</div>
+        <ul>
+          <li>Treat weeks 1, 2 and 3 assignments like mini exams. A weak score in one subject can block the whole exam even if the other three are great.</li>
+          <li>Submit a day before the deadline, never on the last night. Portals slow down when everyone rushes.</li>
+          <li>Check the real deadlines on the portal in week 1 and move the Thursday assignment days in this plan if they differ.</li>
+          <li>Do the week 4 assignment too. It doesn't count for eligibility, but it is the best practice you'll get.</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Computational Thinking</summary>
+        <ul>
+          <li>Don't just watch the lectures. Pause before each answer is revealed and predict it yourself.</li>
+          <li>Trace every pseudocode by hand with a small table: one column per variable, one row per step. This single habit fixes most CT mistakes.</li>
+          <li>The usual traps are forgetting to initialise a variable, updating it in the wrong place, and miscounting how many times a nested loop runs.</li>
+          <li>Redo every example from the lectures on paper without looking. If you can't, that's tomorrow's first 15 minutes.</li>
+          <li>For the dataset cards (scores, words, shopping bills), practise asking your own questions: how many cards pass this filter, what's the max, what's the sum.</li>
+          <li>Give CT your freshest hour of the day. It needs your sharpest brain.</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Maths 1</summary>
+        <ul>
+          <li>Build a one page formula sheet as you go, not at the end. Add to it every day.</li>
+          <li>Sketch a quick graph whenever there's a function, line or parabola. Pictures make the algebra obvious.</li>
+          <li>Solve problems more than you rewatch videos. Ten solved questions beat one extra lecture.</li>
+          <li>For sets and relations, test each property with a tiny example before trusting your answer.</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Stats 1</summary>
+        <ul>
+          <li>Always ask first: is this data categorical or numerical? Half the questions depend on that answer.</li>
+          <li>Remember the four scales in order: nominal, ordinal, interval, ratio. Each one allows everything the previous one does, plus a little more.</li>
+          <li>Calculate a mean, median and standard deviation fully by hand at least once, so the formulas stop feeling abstract.</li>
+          <li>You already love data. Stats is the subject where that shows. Enjoy it.</li>
+        </ul>
+      </details>
+      <details>
+        <summary>English 1</summary>
+        <ul>
+          <li>This is the most scoreable subject. Don't skip it just because it feels easy.</li>
+          <li>Say the sounds and stressed syllables out loud. Reading them silently doesn't stick.</li>
+          <li>Keep a short list of grammar rules you got wrong and read it before every assignment.</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Building your own timetable</summary>
+        <ul>
+          <li>Put CT at the time of day you feel sharpest, and English when you're most tired. It's the lightest.</li>
+          <li>Leave gaps. A timetable with no breaks is a timetable you'll abandon by noon.</li>
+          <li>Plan tonight for tomorrow. Waking up to a ready list removes the first decision of the day.</li>
+          <li>If yesterday worked, copy it. Consistency beats reinventing the day.</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Staying focused</summary>
+        <ul>
+          <li>Use the Focus tab. A visible timer makes it easier to ignore everything else.</li>
+          <li>When you can't start, commit to just two minutes. Starting is the hardest part; continuing is easy.</li>
+          <li>Move during breaks: a walk, stretches, stairs. Sitting still for hours drains focus.</li>
+          <li>Sleep is part of studying. Memory is built overnight, so a late night costs more than it gives.</li>
+          <li>Tick things off the moment you finish them. That little moment of progress is real fuel.</li>
+        </ul>
+      </details>
+      <details>
+        <summary>On a bad day</summary>
+        <ul>
+          <li>Do the minimum day: 30 minutes of CT and one assignment question. That's still a win.</li>
+          <li>Don't try to catch up everything tomorrow. Just carry on with tomorrow's plan and fold the missed topic into Sunday.</li>
+          <li>Missing one day is normal. Missing two in a row is when to pause and ask what's going on.</li>
+          <li>Be as kind to yourself as you are to everyone else. You deserve it too.</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Mocks and revision</summary>
+        <ul>
+          <li>Take mocks exactly like the real thing: timed, phone away, no pausing.</li>
+          <li>Spend as long analysing a mock as feels reasonable, then a bit more. The learning is in the review.</li>
+          <li>Tag each mistake as concept, careless, or time. Each one needs a different fix.</li>
+          <li>In the last two days, no new topics. Only your formula sheet, one page summaries and your mistake notebook.</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Exam day</summary>
+        <ul>
+          <li>Pack the night before: hall ticket, photo ID and anything else the hall ticket asks for. Follow its instructions over anything written here.</li>
+          <li>Check the route to the centre in advance and leave early.</li>
+          <li>Eat something light and familiar.</li>
+          <li>If a question stumps you, mark it and move on. Come back with fresh eyes.</li>
+          <li>You did the work. Walk in knowing that.</li>
+        </ul>
+      </details>
+    </div>
+  </section>
+
+  <footer>Made with love, for you. One day at a time.</footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ======================= CONFIG ======================= */
+const NAME = "Siddhi";
+const EXAM = new Date(2026, 10, 15);
+const STORE = "study-moon-v1";
+/* Cloud sync through Google Apps Script. Paste the web app URL and the same SECRET you set in Code.gs.
+   Leave SYNC_URL empty to keep data in this browser only. */
+const SYNC_URL = "";
+const SYNC_KEY = "";
+
+/* Level rewards. Edit freely: change the text, add or remove lines. */
+const REWARDS = [
+  {level:2,  text:"Pick the next movie on our watchlist"},
+  {level:4,  text:"A handwritten letter in the post"},
+  {level:6,  text:"Your favourite dessert, delivered"},
+  {level:8,  text:"A long call with zero study talk"},
+  {level:10, text:"A surprise gift"},
+  {level:12, text:"A whole day planned around you, after the exam"}
+];
+
+const SUBJ = {
+  ct:   {name:"Computational Thinking", short:"CT", c:"var(--ct)"},
+  m:    {name:"Maths 1", short:"Maths", c:"var(--m)"},
+  s:    {name:"Stats 1", short:"Stats", c:"var(--s)"},
+  e:    {name:"English 1", short:"English", c:"var(--e)"},
+  mock: {name:"Mock test", short:"Mock", c:"var(--mock)"},
+  exam: {name:"Qualifier exam", short:"Exam", c:"var(--mock)"},
+  free: {name:"Free study", short:"Pomodoro", c:"var(--ca)"},
+  other:{name:"Other", short:"Other", c:"var(--dim)"}
+};
+const KIND = {
+  learn:{c:"#B7A7E8"}, sunday:{c:"#AEAAC6"}, assign:{c:"#8FB8F0"}, rev:{c:"#86CDBF"},
+  mock:{c:"#E9A2AB"}, taper:{c:"#86CDBF"}, light:{c:"#E8C170"}, exam:{c:"#E9A2AB"}
+};
+
+/* ======================= SYLLABUS ======================= */
+const LEARN = {
+ 1:{ct:["Intro to CT and the datasets (scores, words, shopping bills)","Variables and initialisation","Iterators and datatypes","Filtering","Flowcharts and sanity of data"],
+    m:["Number systems: naturals, integers, rationals, reals","Sets, notation and set operations","Venn diagrams and counting problems","Relations: reflexive, symmetric, transitive, equivalence","Functions: domain, range, one to one, onto"],
+    s:["What statistics is; descriptive vs inferential","Types of data: categorical vs numerical","Cross sectional vs time series data","Scales: nominal, ordinal, interval, ratio","Practice: classifying data and scales"],
+    e:["Vowel sounds","Consonant sounds","Words and word formation","Pronunciation practice","Week 1 practice questions"]},
+ 2:{ct:["Iteration revisited on the datasets","Filtering with multiple conditions","Selection and the AND operator","Writing pseudocode","Finding max and min"],
+    m:["Rectangular coordinates and the distance formula","Section formula and area of a triangle","Slope; parallel and perpendicular lines","Equations of a line in all forms","Distance of a point from a line; straight line fit"],
+    s:["Frequency distributions and relative frequency","Bar charts and pie charts","Graphing best practices and misleading graphs","Mode and median for categorical data","Pareto charts and practice"],
+    e:["Nouns and pronouns","Verbs and adverbs","Adjectives and determiners","Prepositions, conjunctions, interjections","Week 2 practice questions"]},
+ 3:{ct:["Multiple non nested iterations","The three prizes problem","Procedures and parameters","Side effects","OR operator and mixed practice"],
+    m:["Quadratic functions and their graphs","Vertex, axis of symmetry, max and min","Solving quadratics; the discriminant","Nature of roots; sum and product of roots","Word problems on quadratics"],
+    s:["Frequency tables and class intervals","Histograms and stem and leaf plots","Mean, median, mode","Range, variance, standard deviation","Percentiles, quartiles, IQR, box plots"],
+    e:["Subject and predicate","Simple, compound, complex sentences","Phrases and clauses","Sentence correction","Week 3 practice questions"]},
+ 4:{ct:["Nested iterations","The birthday paradox","Binning","Nested iterations with binning practice","Pseudocode drill covering weeks 1 to 4"],
+    m:["Polynomials: terms, degree, types","Adding, subtracting, multiplying polynomials","Division; remainder and factor theorem","Zeros and graphs of polynomials","Factorisation and multiplicity of roots"],
+    s:["Two categorical variables: contingency tables","Row and column relative frequencies","Scatter plots","Covariance","Correlation coefficient and practice"],
+    e:["Speaking: introductions and greetings","Conversational phrases","Fluency and clarity","Speaking practice out loud","Week 4 practice questions"]}
+};
+
+/* ======================= BUILD DAYS ======================= */
+function key(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function T(id,subj,label,mins){return {id,subj,label,mins,xp:Math.max(10,Math.round(mins*2/3/5)*5)}}
+function iitm(ct,m,s,e,mins){mins=mins||[60,45,45,30];return [T("ct","ct",ct,mins[0]),T("m","m",m,mins[1]),T("s","s",s,mins[2]),T("e","e",e,mins[3])]}
+const SUNMINS=[30,20,20,20];
+const DAYS = [];
+(function(){
+  let d = new Date(2026,9,2);
+  for(let w=1; w<=4; w++){
+    let li=0;
+    for(let k=0;k<7;k++){
+      const wd=d.getDay(); let day;
+      if(wd===0){
+        day={kind:"sunday",phase:`Week ${w}: Sunday recap`,
+          tasks:iitm("Recap this week's CT; redo lecture examples","Recap this week's Maths","Recap this week's Stats","Update formula sheet and mistake notebook",SUNMINS)};
+      } else if(wd===4){
+        day={kind:"assign",phase:`Week ${w}: Assignment day`,
+          note: w<=3 ? "This week's assignments count towards exam eligibility. Aim well above 40% in every subject." : "Week 4 doesn't count for eligibility, but it's your best practice before revision.",
+          tasks:iitm(`Submit Week ${w} CT assignment; redo any errors`,`Submit Week ${w} Maths assignment`,`Submit Week ${w} Stats assignment`,`Submit Week ${w} English assignment`)};
+      } else {
+        const L=LEARN[w];
+        day={kind:"learn",phase:`Week ${w}: Learning`,tasks:iitm(L.ct[li],L.m[li],L.s[li],L.e[li])};
+        li++;
+      }
+      day.week=w; day.date=new Date(d); DAYS.push(day); d.setDate(d.getDate()+1);
+    }
+  }
+  const R=(kind,phase,tasks,note)=>({kind,phase,tasks,note,week:"R"});
+  const MOCK=n=>R("mock",`Mock test ${n}`,[T("mock","mock",`Mock ${n}: full timed paper, all four subjects`,240),T("anl","mock","Check answers and log every mistake in the notebook",60)]);
+  const rev=[
+    R("rev","Revise Week 1",iitm("Revise Week 1 CT","Revise Week 1 Maths","Revise Week 1 Stats","Revise Week 1 English")),
+    R("rev","Revise Week 2",iitm("Revise Week 2 CT","Revise Week 2 Maths","Revise Week 2 Stats","Revise Week 2 English")),
+    R("sunday","Sunday: formula sheets",iitm("Recap Weeks 1 and 2 CT","Formula sheet: Maths weeks 1 to 4","Formula sheet: Stats weeks 1 to 4","Read through the mistake notebook",SUNMINS)),
+    R("rev","Revise Week 3",iitm("Revise Week 3 CT","Revise Week 3 Maths","Revise Week 3 Stats","Revise Week 3 English")),
+    R("rev","Revise Week 4",iitm("Revise Week 4 CT","Revise Week 4 Maths","Revise Week 4 Stats","Revise Week 4 English")),
+    R("rev","CT drill day",iitm("Pseudocode tracing drill across all four weeks","Mixed problems","Mixed problems","Quick grammar quiz",[90,45,45,30]),"CT gets 90 minutes today. Trace, trace, trace."),
+    MOCK(1),
+    R("rev","Mock 1 fixes",iitm("Fix CT mistakes from Mock 1","Fix Maths mistakes","Fix Stats mistakes","Fix English mistakes")),
+    R("rev","Previous year questions",iitm("CT previous year questions","Maths previous year questions","Stats previous year questions","English previous year questions")),
+    R("sunday","Sunday: weak topics",iitm("List your weakest CT topics","List your weakest Maths topics","List your weakest Stats topics","Light reading",SUNMINS)),
+    MOCK(2),
+    R("rev","Mock 2 fixes",iitm("Fix CT mistakes from Mock 2","Fix Maths mistakes","Fix Stats mistakes","Fix English mistakes")),
+    R("rev","Weak topics",iitm("Hardest CT topics again: nested loops, procedures","Hardest Maths topics","Hardest Stats topics","Pronunciation and grammar rules")),
+    MOCK(3),
+    R("taper","Final polish",iitm("Mock 3 fixes; write a one page CT summary","Maths formula sheet only","Stats formula sheet only","Mistake notebook only"),"Keep today light so you arrive rested."),
+    R("light","Day before the exam",[T("ct","ct","Skim your one page CT summary",30),T("m","m","Skim the Maths formula sheet",20),T("s","s","Skim the Stats formula sheet",20),T("e","e","Read the mistake notebook once",20),T("pack","exam","Pack hall ticket, ID and everything the hall ticket asks for",15)],"No new topics today. Early night."),
+    R("exam","Qualifier exam",[T("wake","exam","Light breakfast, one calm look at your summary",20),T("go","exam","Reach the centre early with hall ticket and ID",30),T("exam","exam","Write the qualifier. You're ready.",240)],"Exam timing is on your hall ticket. Follow its instructions.")
+  ];
+  rev.forEach(r=>{r.date=new Date(d);DAYS.push(r);d.setDate(d.getDate()+1)});
+})();
+const BYKEY = Object.fromEntries(DAYS.map((d,i)=>[key(d.date),i]));
+const TOTAL_MIN = DAYS.reduce((a,d)=>a+d.tasks.reduce((x,t)=>x+t.mins,0),0);
+
+/* ======================= NUGGETS ======================= */
+const NUGGETS = [
+ "Day one doesn't need to be perfect. It just needs to happen.",
+ "You don't have to feel ready to start. Starting is what makes you ready.",
+ "Small ticks, every day, add up to a full moon.",
+ "Trace it by hand. Your pencil understands loops before your brain does.",
+ "Confusion is not a sign you're bad at this. It's the feeling of learning.",
+ "Forty percent opens the door. Aim higher, but remember the door.",
+ "Rest is part of the plan, not a break from it.",
+ "One focused hour beats three distracted ones.",
+ "Be curious about your mistakes, not cruel about them.",
+ "The version of you on exam day is built by what you do this afternoon.",
+ "When it feels heavy, shrink the task until it feels light. Then begin.",
+ "Nobody sees the early mornings. The results will.",
+ "Every variable needs initialising. So does every day: water, sunlight, one deep breath.",
+ "It's okay to go slowly. It's not okay to stop.",
+ "You love data. Be a scientist about your own progress, not a judge.",
+ "Finish the assignment a day early and give tomorrow a gift.",
+ "Two kinds of hard: studying now, or scrambling later. Pick the kind one.",
+ "Halfway through the learning weeks. Look how much you already know.",
+ "A tough topic is just a topic you haven't finished yet.",
+ "Close the tabs. Keep one thing open: the thing in front of you.",
+ "Progress hides. Look back at Week 1 and you'll find it.",
+ "You are allowed to be proud of a quiet, ordinary, productive day.",
+ "Nested loops are just loops inside loops. So is patience.",
+ "Stars don't rush, and they still light up the whole sky.",
+ "If today went sideways, tomorrow is a clean page.",
+ "Your future self is quietly cheering for you right now.",
+ "Last learning week. Finish strong, then breathe.",
+ "Learning is done. Now you make it stick.",
+ "Revision is where scattered pieces become one picture.",
+ "Write it down. What you write, you remember.",
+ "You have done harder things than this. You'll do this too.",
+ "Mocks are rehearsals, not verdicts.",
+ "A mistake found today is a mark saved on the fifteenth.",
+ "Keep your why close. Read it before you start today.",
+ "Be as gentle with yourself as you are with everyone you care about.",
+ "Every mock makes the real one feel familiar.",
+ "Consistency is quiet. It's also unstoppable.",
+ "You're not behind. You're exactly where the work has brought you.",
+ "Fix the errors, trust the process.",
+ "Weak topics are just future strong topics.",
+ "Nothing new now. Polish what's already yours.",
+ "Almost full moon. Look at everything you've done.",
+ "Tonight: pack your bag, drink water, sleep early.",
+ "You've done the work. Walk in knowing it.",
+ "Whatever happens today, you showed up for 45 days straight. That's the real result."
+];
+
+/* ======================= STORAGE + CLOUD SYNC ======================= */
+const BLANK = () => ({checks:{}, notes:{}, notebook:[], focus:[], todos:{}, timer:null, meta:{level:null,badges:{}}, updatedAt:0});
+function normalise(x){const o=Object.assign(BLANK(),x||{});o.meta=Object.assign({level:null,badges:{}},o.meta||{});o.todos=o.todos||{};return o}
+let S = BLANK();
+try{ const raw=localStorage.getItem(STORE); if(raw) S=normalise(JSON.parse(raw)); }catch(e){}
+let syncT=null, retryT=null, dirty=false, pulled=!SYNC_URL;
+function setSync(state,msg){
+  const dot=document.getElementById("syncDot"), txt=document.getElementById("syncTxt"); if(!dot) return;
+  dot.className="sdot "+({saved:"ok",saving:"busy",loading:"busy",error:"err"}[state]||"");
+  txt.textContent=msg;
+}
+function save(){
+  S.updatedAt=Date.now();
+  try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){}
+  if(!SYNC_URL) return;
+  dirty=true; setSync("saving","Saving");
+  clearTimeout(syncT); syncT=setTimeout(push,1200);
+}
+async function push(){
+  if(!SYNC_URL||!dirty) return;
+  if(!pulled){ clearTimeout(syncT); syncT=setTimeout(push,1500); return; }
+  clearTimeout(retryT);
+  const sentAt=S.updatedAt;
+  try{
+    const r=await fetch(SYNC_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({key:SYNC_KEY,state:S})});
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.error||"save failed");
+    if(j.stale && j.state){ adopt(j.state); }
+    if(S.updatedAt===sentAt) dirty=false;
+    setSync("saved","IITM Qualifier, saved");
+  }catch(e){
+    setSync("error","Not saved yet, retrying");
+    retryT=setTimeout(push,15000);
+  }
+}
+function adopt(remote){
+  S=normalise(remote);
+  try{ localStorage.setItem(STORE, JSON.stringify(S)); }catch(e){}
+  if(S.timer&&S.timer.subj&&SUBJ[S.timer.subj]||S.timer&&S.timer.subj==="break"){ fsel=S.timer; stopTick(); if(fsel.endAt&&remaining()>0) tick=setInterval(paintTimer,500); }
+  renderAll(true);
+}
+async function pull(){
+  if(!SYNC_URL) return;
+  setSync("loading","Loading your progress");
+  try{
+    const r=await fetch(SYNC_URL+"?key="+encodeURIComponent(SYNC_KEY)+"&t="+Date.now());
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.error||"load failed");
+    pulled=true;
+    if(j.state && (j.state.updatedAt||0) > (S.updatedAt||0)) adopt(j.state);
+    else if((S.updatedAt||0) > 0 && (!j.state || S.updatedAt > (j.state.updatedAt||0))){ dirty=true; push(); }
+    if(!dirty) setSync("saved","IITM Qualifier, saved");
+  }catch(e){
+    setSync("error","Couldn't reach the cloud. Check the connection.");
+    setTimeout(pull,15000);
+  }
+}
+function flush(){
+  if(!SYNC_URL||!dirty||!pulled) return;
+  try{ navigator.sendBeacon(SYNC_URL,new Blob([JSON.stringify({key:SYNC_KEY,state:S})],{type:"text/plain;charset=utf-8"})); }catch(e){}
+}
+window.addEventListener("pagehide",flush);
+
+/* ======================= HELPERS ======================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function today0(){const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())}
+function todayIdx(){const k=key(today0()); if(k in BYKEY) return BYKEY[k]; return today0()<DAYS[0].date?0:DAYS.length-1}
+function fmtDate(d,long){return d.toLocaleDateString("en-IN",long?{weekday:"long",day:"numeric",month:"long"}:{day:"numeric",month:"short"})}
+function fmtHM(hm){if(!hm)return "";let [h,m]=hm.split(":").map(Number);const ap=h>=12?"pm":"am";h=h%12||12;return h+":"+String(m).padStart(2,"0")+" "+ap}
+function fmtMins(m){const h=Math.floor(m/60),r=m%60;return h?(r?`${h} hr ${r} min`:`${h} hr`):`${r} min`}
+function isDone(k,id){return !!(S.checks[k]&&S.checks[k][id])}
+function dayStats(i){const d=DAYS[i],k=key(d.date);let tot=0,dn=0,cnt=0;d.tasks.forEach(t=>{tot+=t.mins;if(isDone(k,t.id)){dn+=t.mins;cnt++}});return {tot,dn,cnt,n:d.tasks.length}}
+function doneMinutes(){let m=0;DAYS.forEach((d,i)=>m+=dayStats(i).dn);return m}
+function dayComplete(i){const st=dayStats(i);return st.n>0&&st.cnt===st.n}
+function streak(){ if(today0()<DAYS[0].date) return 0; let i=todayIdx(); if(!dayComplete(i)) i--; let s=0; while(i>=0&&dayComplete(i)){s++;i--} return s}
+function bestStreak(){let b=0,c=0;DAYS.forEach((d,i)=>{if(dayComplete(i)){c++;b=Math.max(b,c)}else c=0});return b}
+let toastT; function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2600)}
+const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function sparkle(x,y,n){
+  if(reduceMotion) return;
+  x=x??innerWidth/2; y=y??innerHeight/2; n=n||14;
+  for(let i=0;i<n;i++){const s=document.createElement("span");s.className="sparkle";s.textContent=["✦","✧","★","☾"][i%4];
+    const a=Math.random()*Math.PI*2,r=60+Math.random()*120;s.style.left=x+"px";s.style.top=y+"px";
+    s.style.setProperty("--dx",Math.cos(a)*r+"px");s.style.setProperty("--dy",Math.sin(a)*r-40+"px");
+    s.style.color=["#E8C170","#B7A7E8","#EDE6D3","#86CDBF"][i%4];document.body.appendChild(s);setTimeout(()=>s.remove(),1700)}
+}
+
+/* ======================= GAME ENGINE ======================= */
+const LEVELS=[[0,"New Moon"],[150,"Crescent"],[400,"First Quarter"],[750,"Waxing Gibbous"],[1200,"Full Moon"],[1800,"Stargazer"],
+  [2500,"Constellation"],[3300,"Comet Rider"],[4200,"Nebula"],[5200,"Galaxy"],[6400,"Supernova"],[7800,"Sky Legend"],[9500,"Moonwalker"],[11500,"Queen of the Cosmos"]];
+function focusByDay(){const m={};S.focus.forEach(f=>{m[f.d]=(m[f.d]||0)+f.m});return m}
+function quests(i){
+  const d=DAYS[i],k=key(d.date),first=d.tasks[0],fm=focusByDay()[k]||0,note=(S.notes[k]||"").trim();
+  return [
+    {t:`Finish: ${first.label}`,ok:isDone(k,first.id)},
+    {t:"Complete one focus session",ok:S.focus.some(f=>f.d===k&&SUBJ[f.s])},
+    {t:"Write your one line about today",ok:note.length>=8}
+  ];
+}
+function xpBreakdown(){
+  let x=0;
+  DAYS.forEach((d,i)=>{const k=key(d.date);
+    d.tasks.forEach(t=>{if(isDone(k,t.id))x+=t.xp});
+    if(dayComplete(i))x+=50;
+    if(quests(i).every(q=>q.ok))x+=30;
+  });
+  S.focus.forEach(f=>{if(SUBJ[f.s])x+=Math.floor(f.m/2)});
+  Object.values(S.todos).forEach(list=>{x+=Math.min(10,list.filter(t=>t.done).length)*10});
+  const nbDay={};S.notebook.forEach(n=>nbDay[n.d]=(nbDay[n.d]||0)+1);Object.values(nbDay).forEach(c=>x+=Math.min(5,c)*15);
+  Object.values(S.notes).forEach(n=>{if((n||"").trim().length>=8)x+=10});
+  return x;
+}
+function levelOf(x){let l=0;LEVELS.forEach(([t],i)=>{if(x>=t)l=i});const cur=LEVELS[l][0],nxt=LEVELS[l+1]?LEVELS[l+1][0]:null;return {l:l+1,name:LEVELS[l][1],cur,nxt,x}}
+function tasksWhere(fn){let tot=0,dn=0;DAYS.forEach(d=>{const k=key(d.date);d.tasks.forEach(t=>{if(fn(d,t)){tot++;if(isDone(k,t.id))dn++}})});return tot&&dn===tot}
+function weekDone(w){return DAYS.every((d,i)=>d.week!==w||dayComplete(i))}
+const BADGES=[
+ {id:"first",ic:"🌱",n:"First light",d:"Tick your very first task",f:()=>Object.values(S.checks).some(o=>Object.keys(o).length)},
+ {id:"early",ic:"🌅",n:"Early bird",d:"Finish a CT task before 9 am",f:()=>DAYS.some(d=>{const v=(S.checks[key(d.date)]||{}).ct;if(!v||v===true)return false;const t=new Date(v);return key(t)===key(d.date)&&t.getHours()<9})},
+ {id:"s3",ic:"🔥",n:"Three in a row",d:"Complete 3 full days in a row",f:()=>bestStreak()>=3},
+ {id:"s7",ic:"✨",n:"Seven sisters",d:"Complete 7 full days in a row",f:()=>bestStreak()>=7},
+ {id:"s14",ic:"🌌",n:"Fortnight of focus",d:"Complete 14 full days in a row",f:()=>bestStreak()>=14},
+ {id:"w1",ic:"1️⃣",n:"Week 1 cleared",d:"Every task in week 1 done",f:()=>weekDone(1)},
+ {id:"w2",ic:"2️⃣",n:"Week 2 cleared",d:"Every task in week 2 done",f:()=>weekDone(2)},
+ {id:"w3",ic:"3️⃣",n:"Week 3 cleared",d:"Every task in week 3 done",f:()=>weekDone(3)},
+ {id:"w4",ic:"4️⃣",n:"Week 4 cleared",d:"Every task in week 4 done",f:()=>weekDone(4)},
+ {id:"gate",ic:"🔓",n:"Gate unlocked",d:"All assignments for weeks 1 to 3 submitted",f:()=>tasksWhere(d=>d.kind==="assign"&&d.week<=3)},
+ {id:"loop",ic:"🔁",n:"Loop master",d:"Every CT task in weeks 1 to 4 done",f:()=>tasksWhere((d,t)=>t.subj==="ct"&&typeof d.week==="number")},
+ {id:"deep",ic:"🧘",n:"Deep diver",d:"Finish a 60 minute focus session",f:()=>S.focus.some(f=>f.m>=60&&SUBJ[f.s])},
+ {id:"mara",ic:"🏃",n:"Marathon mind",d:"10 hours of focus sessions in total",f:()=>S.focus.filter(f=>SUBJ[f.s]).reduce((a,f)=>a+f.m,0)>=600},
+ {id:"hunt",ic:"🔍",n:"Mistake hunter",d:"10 notebook entries",f:()=>S.notebook.length>=10},
+ {id:"diary",ic:"📓",n:"Diarist",d:"Write your one line on 7 days",f:()=>Object.values(S.notes).filter(n=>(n||"").trim().length>=8).length>=7},
+ {id:"arch",ic:"🗓️",n:"Architect",d:"Finish 20 items from your own timetable",f:()=>Object.values(S.todos).reduce((a,l)=>a+l.filter(t=>t.done).length,0)>=20},
+ {id:"quest",ic:"🏹",n:"Quest queen",d:"Clear all daily quests on 5 days",f:()=>DAYS.filter((d,i)=>quests(i).every(q=>q.ok)).length>=5},
+ {id:"mock1",ic:"🎯",n:"First mock",d:"Finish your first full mock",f:()=>DAYS.some(d=>d.kind==="mock"&&isDone(key(d.date),"mock"))},
+ {id:"mock3",ic:"🏆",n:"Triple mock",d:"Finish all three mocks",f:()=>DAYS.filter(d=>d.kind==="mock").every(d=>isDone(key(d.date),"mock"))},
+ {id:"half",ic:"🌓",n:"Half moon",d:"Half of the whole plan done",f:()=>doneMinutes()>=TOTAL_MIN/2},
+ {id:"full",ic:"🌕",n:"Full moon",d:"The entire plan done",f:()=>doneMinutes()>=TOTAL_MIN}
+];
+let GAME={x:0,lv:levelOf(0),got:{}};
+function computeGame(){const x=xpBreakdown();const got={};BADGES.forEach(b=>{if(b.f())got[b.id]=true});GAME={x,lv:levelOf(x),got};return GAME}
+function celebrate(silent){
+  const g=computeGame(); let changed=false;
+  const newB=BADGES.filter(b=>g.got[b.id]&&!S.meta.badges[b.id]);
+  if(S.meta.level===null){ S.meta.level=g.lv.l; newB.forEach(b=>S.meta.badges[b.id]=Date.now()); if(newB.length||true) changed=true; }
+  else{
+    if(!silent && g.lv.l>S.meta.level) showLevelUp(g.lv);
+    if(!silent && newB.length){ toast(`Badge unlocked: ${newB.map(b=>b.ic+" "+b.n).join(", ")}`); sparkle(); }
+    if(g.lv.l!==S.meta.level){S.meta.level=g.lv.l;changed=true}
+    newB.forEach(b=>{S.meta.badges[b.id]=Date.now();changed=true});
+  }
+  if(changed){ try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){} }
+  return g;
+}
+function showLevelUp(lv){
+  const rw=REWARDS.filter(r=>r.level===lv.l).map(r=>`<p style="margin-top:10px">Reward unlocked:<br><b>${esc(r.text)}</b></p>`).join("");
+  const o=document.createElement("div");o.className="levelup";o.setAttribute("role","dialog");o.setAttribute("aria-label","Level up");
+  o.innerHTML=`<div class="card"><div style="font-size:2.4rem">🌙</div><div class="muted">Level up</div><div class="big">Level ${lv.l}<br>${esc(lv.name)}</div>${rw}<button class="btn" style="margin-top:14px">Keep going</button></div>`;
+  document.body.appendChild(o); o.querySelector("button").focus();
+  const close=()=>o.remove(); o.querySelector("button").onclick=close; o.onclick=e=>{if(e.target===o)close()};
+  for(let i=0;i<3;i++) setTimeout(()=>sparkle(innerWidth/2,innerHeight/2,20),i*250);
+}
+
+/* ======================= MOON ======================= */
+function drawMoon(f){
+  f=Math.max(0,Math.min(1,f)); const cx=120,cy=120,r=86;
+  const p=$("#moonLit");
+  if(f<=0.005){p.setAttribute("d","");}
+  else if(f>=0.995){p.setAttribute("d",`M${cx},${cy-r}A${r},${r} 0 1 1 ${cx-.01},${cy-r}Z`);}
+  else{const rx=Math.abs(1-2*f)*r, sw=f>0.5?1:0;
+    p.setAttribute("d",`M${cx},${cy-r}A${r},${r} 0 0 1 ${cx},${cy+r}A${rx},${r} 0 0 ${sw} ${cx},${cy-r}Z`);}
+  $("#moonGlow").setAttribute("opacity",(0.3+0.7*f).toFixed(2));
+  $("#moonPct").textContent=Math.round(f*100)+"% of the plan done";
+}
+
+/* ======================= TODAY VIEW ======================= */
+let sel = todayIdx();
+function lvlBarHTML(lv,noName){const span=lv.nxt?lv.nxt-lv.cur:1,pct=lv.nxt?(lv.x-lv.cur)/span*100:100;
+  return `<div class="row"><span class="name">${noName?"":`Level ${lv.l}: ${esc(lv.name)}`}</span><span class="xp">${lv.x} XP</span></div>
+  <div class="xpbar"><i style="width:${pct}%"></i></div>
+  <div class="xp" style="margin-top:4px">${lv.nxt?`${lv.nxt-lv.x} XP to ${esc(LEVELS[lv.l][1])}`:"Top level reached"}</div>`}
+function renderHero(){
+  const now=new Date(), h=now.getHours();
+  const greet=h<5?"Still up":h<12?"Good morning":h<17?"Good afternoon":"Good evening";
+  $("#hello").textContent=`${greet}, ${NAME}.`;
+  const t0=today0(), days=Math.round((EXAM-t0)/864e5);
+  let html;
+  if(t0<DAYS[0].date){const s=Math.round((DAYS[0].date-t0)/864e5);html=`${s} ${s===1?"day":"days"}<span>until Week 1 begins on Friday, 2 October</span>`}
+  else if(days>1) html=`${days} days<span>to your qualifier on Sunday, 15 November</span>`;
+  else if(days===1) html=`Tomorrow<span>is the qualifier. You're ready.</span>`;
+  else if(days===0) html=`Today<span>is the day. Go shine.</span>`;
+  else html=`Done<span>You finished the whole journey. So proud of you.</span>`;
+  $("#count").innerHTML=html;
+  drawMoon(doneMinutes()/TOTAL_MIN);
+  const st=streak(), nb=Object.keys(GAME.got).length;
+  const di=t0<DAYS[0].date?0:Math.min(todayIdx()+1,DAYS.length);
+  $("#stats").innerHTML=
+    `<span class="pill">Day <b>${di}</b> of ${DAYS.length}</span>`+
+    `<span class="pill">🔥 Streak <b>${st}</b></span>`+
+    `<span class="pill">🏅 <b>${nb}</b> of ${BADGES.length} badges</span>`;
+  $("#lvlMini").innerHTML=lvlBarHTML(GAME.lv);
+}
+function renderDay(){
+  const d=DAYS[sel], k=key(d.date);
+  $("#dayTitle").textContent=fmtDate(d.date,true);
+  const kd=$("#dayKind"); kd.textContent=d.phase; kd.style.background=KIND[d.kind].c;
+  $("#prevDay").disabled=sel===0; $("#nextDay").disabled=sel===DAYS.length-1;
+  $("#backToday").innerHTML = sel!==todayIdx()?`<button class="linkbtn" id="goToday">Back to today</button>`:"";
+  if($("#goToday")) $("#goToday").onclick=()=>{sel=todayIdx();renderDay()};
+  $("#taskList").innerHTML = d.tasks.map(t=>{const done=isDone(k,t.id),sj=SUBJ[t.subj];return `
+    <div class="task${done?" isdone":""}" style="--c:${sj.c}">
+      <label><input type="checkbox" data-id="${t.id}" ${done?"checked":""} aria-label="${esc(sj.name+": "+t.label)}">
+      <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.2"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+      <span><span class="subj">${sj.name}</span><br><span class="topic">${esc(t.label)}</span></span>
+      <span class="mins"><span>${fmtMins(t.mins)}</span><span class="xpchip">+${t.xp} XP</span></span></label>
+    </div>`}).join("");
+  $("#dayNote").innerHTML = d.note?`<p class="muted" style="font-size:.9rem;margin:12px 0 0">${esc(d.note)}</p>`:"";
+  $("#taskList").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{
+    const id=e.target.dataset.id; S.checks[k]=S.checks[k]||{};
+    const r=e.target.closest(".task").getBoundingClientRect();
+    if(e.target.checked){S.checks[k][id]=Date.now(); sparkle(r.left+30,r.top+r.height/2,8)} else delete S.checks[k][id];
+    save(); refresh();
+    if(e.target.checked && dayComplete(sel)) toast("Whole day complete. +50 XP bonus!");
+  }));
+  const st=dayStats(sel);
+  $("#dayBar").style.width=(st.tot?st.dn/st.tot*100:0)+"%";
+  $("#dayFrac").textContent=`${st.cnt} of ${st.n} done`;
+  if(document.activeElement!==$("#reflect")) $("#reflect").value=S.notes[k]||"";
+  $("#nugget").innerHTML=`<q>${esc(NUGGETS[sel%NUGGETS.length])}</q><div class="by">Thought for ${sel===todayIdx()?"today":fmtDate(d.date)}</div>`;
+  renderQuests(); renderTimetable();
+}
+function renderQuests(){
+  const q=quests(sel),n=q.filter(x=>x.ok).length;
+  $("#questFrac").textContent=n===3?"All clear! +30 XP":`${n} of 3`;
+  $("#quests").innerHTML=q.map(x=>`<div class="quest${x.ok?" ok":""}"><span class="qicon">${x.ok?"✓":""}</span><span class="qt">${esc(x.t)}</span></div>`).join("");
+}
+/* ---- own timetable ---- */
+const TAGS=["ct","m","s","e","other"];
+$("#ttTag").innerHTML=TAGS.map(t=>`<option value="${t}">${SUBJ[t].name}</option>`).join("");
+function ttList(k){return (S.todos[k]||[]).slice().sort((a,b)=>(a.time||"99:99").localeCompare(b.time||"99:99")||a.id-b.id)}
+function renderTimetable(){
+  const d=DAYS[sel],k=key(d.date),list=ttList(k);
+  const isToday=sel===todayIdx()&&key(today0())===k;
+  const n=new Date(),nowHM=String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");
+  let nowId=null,next=null;
+  if(isToday){const timed=list.filter(t=>t.time);timed.forEach(t=>{if(t.time<=nowHM)nowId=t.id});next=timed.find(t=>t.time>nowHM&&!t.done)}
+  const cur=list.find(t=>t.id===nowId);
+  $("#nowCard").innerHTML=!isToday||!list.length?"":
+    (cur&&!cur.done?`<span class="muted">Right now</span><b>${esc(cur.text)}</b>`:"")+(next?`<div class="muted" style="margin-top:4px">Up next at ${fmtHM(next.time)}: ${esc(next.text)}</div>`:"");
+  $("#ttWrap").innerHTML=list.length?`<ul class="tt">${list.map(t=>`<li class="${t.done?"done ":""}${t.id===nowId&&!t.done?"now":""}" style="--c:${SUBJ[t.tag||"other"].c}">
+    <button class="cb" data-id="${t.id}" aria-label="${t.done?"Mark not done":"Mark done"}: ${esc(t.text)}"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.2"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+    <span class="tm">${t.time?fmtHM(t.time):"Anytime"}</span>
+    <span class="tx"><span class="dot" style="background:${SUBJ[t.tag||"other"].c}"></span>${esc(t.text)}</span>
+    <button class="x" data-del="${t.id}" aria-label="Remove ${esc(t.text)}">×</button></li>`).join("")}</ul>`
+    :`<div class="empty">Nothing planned yet. Add your first block below, like "7:00 am CT lecture".</div>`;
+  $("#ttWrap").querySelectorAll(".cb").forEach(b=>b.onclick=()=>{const it=(S.todos[k]||[]).find(t=>t.id==b.dataset.id);if(!it)return;it.done=!it.done;
+    if(it.done){const r=b.getBoundingClientRect();sparkle(r.left+12,r.top+12,8)} save(); refresh()});
+  $("#ttWrap").querySelectorAll(".x").forEach(b=>b.onclick=()=>{S.todos[k]=(S.todos[k]||[]).filter(t=>t.id!=b.dataset.del);save();refresh()});
+}
+$("#ttForm").onsubmit=e=>{e.preventDefault();const text=$("#ttText").value.trim();if(!text){toast("Write what the block is for.");$("#ttText").focus();return}
+  const k=key(DAYS[sel].date);S.todos[k]=S.todos[k]||[];S.todos[k].push({id:Date.now(),time:$("#ttTime").value||"",text,tag:$("#ttTag").value,done:false});
+  $("#ttText").value="";$("#ttTime").value="";save();refresh();$("#ttText").focus()};
+$("#copyYest").onclick=()=>{
+  if(sel===0){toast("There's no day before this one in the plan.");return}
+  const k=key(DAYS[sel].date),pk=key(DAYS[sel-1].date),prev=S.todos[pk]||[];
+  if(!prev.length){toast("Yesterday's timetable is empty.");return}
+  S.todos[k]=S.todos[k]||[];let base=Date.now();
+  prev.forEach(t=>{if(!S.todos[k].some(x=>x.text===t.text&&x.time===t.time))S.todos[k].push({id:base++,time:t.time,text:t.text,tag:t.tag,done:false})});
+  save();refresh();toast("Copied. Tweak anything you like.");
+};
+$("#prevDay").onclick=()=>{if(sel>0){sel--;renderDay()}};
+$("#nextDay").onclick=()=>{if(sel<DAYS.length-1){sel++;renderDay()}};
+let rT; $("#reflect").addEventListener("input",e=>{const k=key(DAYS[sel].date);S.notes[k]=e.target.value;clearTimeout(rT);rT=setTimeout(()=>{save();refresh();$("#reflectSaved").textContent="Saved";setTimeout(()=>$("#reflectSaved").textContent="",1500)},700)});
+
+/* ======================= PLAN VIEW ======================= */
+function ringSvg(f,c){const r=14,C=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="${r}" fill="none" stroke="rgba(237,230,211,.12)" stroke-width="4"/><circle cx="17" cy="17" r="${r}" fill="none" stroke="${c}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-f)}" transform="rotate(-90 17 17)"/></svg>`}
+function renderPlan(){
+  const SB=["ct","m","s","e"],tot={},dn={};SB.forEach(s=>{tot[s]=0;dn[s]=0});
+  DAYS.forEach(d=>{const k=key(d.date);d.tasks.forEach(t=>{if(t.subj in tot){tot[t.subj]+=t.mins;if(isDone(k,t.id))dn[t.subj]+=t.mins}})});
+  $("#subjBars").innerHTML=SB.map(s=>`<div class="sb" style="--c:${SUBJ[s].c}"><div class="n">${SUBJ[s].name}</div><div class="daybar"><i style="width:${tot[s]?dn[s]/tot[s]*100:0}%"></i></div><div class="v">${Math.round(dn[s]/60)} of ${Math.round(tot[s]/60)} hours</div></div>`).join("");
+  const groups=[["Week 1",d=>d.week===1],["Week 2",d=>d.week===2],["Week 3",d=>d.week===3],["Week 4",d=>d.week===4],["Revision and mocks",d=>d.week==="R"]];
+  const ti=todayIdx(), started=today0()>=DAYS[0].date;
+  $("#weeks").innerHTML=groups.map(([g,fn])=>{
+    const idx=DAYS.map((d,i)=>[d,i]).filter(([d])=>fn(d));
+    const cleared=idx.every(([d,i])=>dayComplete(i));
+    const rows=idx.map(([d,i])=>{
+      const st=dayStats(i),f=st.tot?st.dn/st.tot:0;
+      return `<button class="drow${started&&i===ti?" today":""}" data-i="${i}">
+        <span class="d">${d.date.getDate()} ${d.date.toLocaleDateString("en-IN",{month:"short"})}<small>${d.date.toLocaleDateString("en-IN",{weekday:"short"})}</small></span>
+        <span class="ph"><span class="chip" style="background:${KIND[d.kind].c}"></span>${esc(d.phase)}<small>${esc(d.tasks[0].label)}</small></span>
+        ${f>=1?`<span style="font-size:1.5rem" aria-label="Complete">🌕</span>`:ringSvg(f,"var(--ct)")}</button>`}).join("");
+    return `<div class="week panel"><h3>${g}${cleared?" 🏅":""}</h3>${rows}</div>`;
+  }).join("");
+  $("#weeks").querySelectorAll(".drow").forEach(b=>b.onclick=()=>{sel=+b.dataset.i;show("today");renderDay();window.scrollTo({top:0})});
+}
+
+/* ======================= FOCUS TIMER ======================= */
+const PRESETS=[["ct",60],["m",45],["s",45],["e",30],["free",25],["break",10]];
+let fsel=S.timer&&S.timer.subj&&(SUBJ[S.timer.subj]||S.timer.subj==="break")?S.timer:{subj:"ct",mins:60,endAt:null,left:60*60};
+let tick=null, actx=null;
+const fName=s=>s==="break"?"Break":SUBJ[s].name, fShort=s=>s==="break"?"Break":SUBJ[s].short, fCol=s=>s==="break"?"var(--done)":SUBJ[s].c;
+function renderChips(){
+  $("#focusChips").innerHTML=PRESETS.map(([s,m])=>`<button style="--c:${fCol(s)}" aria-pressed="${fsel.subj===s&&fsel.mins===m}" data-s="${s}" data-m="${m}">${fShort(s)} ${m}</button>`).join("");
+  $("#focusChips").querySelectorAll("button").forEach(b=>b.onclick=()=>{if(fsel.endAt&&!confirm("Stop the running timer and switch?"))return;
+    fsel={subj:b.dataset.s,mins:+b.dataset.m,endAt:null,left:+b.dataset.m*60};S.timer=fsel;save();stopTick();renderChips();paintTimer()});
+}
+function remaining(){return fsel.endAt?Math.max(0,Math.round((fsel.endAt-Date.now())/1000)):fsel.left}
+function paintTimer(){
+  const r=remaining(), m=Math.floor(r/60), s=r%60;
+  $("#timeLeft").textContent=`${m}:${String(s).padStart(2,"0")}`;
+  $("#ringFg").setAttribute("stroke-dashoffset",766.5*(1-r/(fsel.mins*60)));
+  $("#ringFg").setAttribute("stroke",fCol(fsel.subj));
+  $("#timerLabel").textContent=fsel.subj==="break"?"Break":`${fName(fsel.subj)}, +${Math.floor(fsel.mins/2)} XP`;
+  $("#startBtn").textContent=fsel.endAt?"Pause":(r<fsel.mins*60&&r>0?"Resume":"Start");
+  document.title=fsel.endAt?`${m}:${String(s).padStart(2,"0")} ${fShort(fsel.subj)}`:"Study Moon";
+  if(fsel.endAt&&r<=0) finish();
+}
+function stopTick(){clearInterval(tick);tick=null}
+function chime(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();[523.25,659.25,783.99].forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type="sine";g.gain.setValueAtTime(.0001,actx.currentTime+i*.22);g.gain.exponentialRampToValueAtTime(.25,actx.currentTime+i*.22+.02);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+i*.22+.9);o.connect(g).connect(actx.destination);o.start(actx.currentTime+i*.22);o.stop(actx.currentTime+i*.22+1)})}catch(e){} if(navigator.vibrate)navigator.vibrate([200,100,200])}
+function finish(){
+  stopTick(); const subj=fsel.subj, mins=fsel.mins;
+  fsel.endAt=null; fsel.left=mins*60; S.timer=fsel;
+  if(subj!=="break"){S.focus.push({d:key(today0()),s:subj,m:mins}); toast(`${fmtMins(mins)} of ${fName(subj)}. +${Math.floor(mins/2)} XP!`); sparkle()}
+  else toast("Break's over. Back to it.");
+  save(); chime(); paintTimer(); refresh();
+}
+$("#startBtn").onclick=()=>{
+  try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(e){}
+  if(fsel.endAt){fsel.left=remaining();fsel.endAt=null;stopTick()}
+  else{const r=remaining()||fsel.mins*60;fsel.endAt=Date.now()+r*1000;tick=setInterval(paintTimer,500)}
+  S.timer=fsel;save();paintTimer();
+};
+$("#resetBtn").onclick=()=>{stopTick();fsel.endAt=null;fsel.left=fsel.mins*60;S.timer=fsel;save();paintTimer()};
+function renderLog(){
+  const tk=key(today0()), t={}, all={};
+  S.focus.forEach(f=>{if(!SUBJ[f.s])return;all[f.s]=(all[f.s]||0)+f.m;if(f.d===tk)t[f.s]=(t[f.s]||0)+f.m});
+  const tt=Object.values(t).reduce((a,b)=>a+b,0), at=Object.values(all).reduce((a,b)=>a+b,0);
+  const rows=["ct","m","s","e","free"].filter(s=>all[s]).map(s=>`<tr><td><span class="chip" style="background:${SUBJ[s].c}"></span>${SUBJ[s].name}</td><td>${fmtMins(t[s]||0)} today, ${fmtMins(all[s])} total</td></tr>`).join("");
+  $("#focusLog").innerHTML=at?`<tr><td><b>Today</b></td><td><b>${fmtMins(tt)}</b></td></tr>${rows}`:`<tr><td class="muted" style="border:0">Finish a session and it will show up here.</td><td style="border:0"></td></tr>`;
+}
+if(fsel.endAt){ if(remaining()>0) tick=setInterval(paintTimer,500); }
+
+/* ======================= TROPHIES ======================= */
+function renderTrophies(){
+  const g=GAME,lv=g.lv;
+  $("#lvlBig").innerHTML=`<div class="num">${lv.l}<small>Level</small></div><div><h2>${esc(lv.name)}</h2><div class="lvl" style="margin-top:6px;max-width:none">${lvlBarHTML(lv,true)}</div></div>`;
+  const got=BADGES.filter(b=>g.got[b.id]).length;
+  $("#badgeCount").textContent=`${got} of ${BADGES.length} unlocked`;
+  $("#badges").innerHTML=BADGES.map(b=>`<div class="badge${g.got[b.id]?" got":""}"><span class="ic" aria-hidden="true">${b.ic}</span><div class="bn">${esc(b.n)}</div><div class="bd">${esc(b.d)}</div></div>`).join("");
+  $("#rewards").innerHTML=REWARDS.map(r=>{const ok=lv.l>=r.level;return `<li class="${ok?"":"lock"}"><span class="rl">Level ${r.level}</span><span>${ok?"🎁 ":"🔒 "}${esc(r.text)}</span></li>`}).join("");
+}
+
+/* ======================= NOTEBOOK ======================= */
+let nbFilter="all";
+const NBS=["ct","m","s","e"];
+$("#nbSubj").innerHTML=NBS.map(s=>`<option value="${s}">${SUBJ[s].name}</option>`).join("");
+$("#nbForm").onsubmit=e=>{e.preventDefault();const what=$("#nbWhat").value.trim();if(!what){toast("Write what happened first.");return}
+  S.notebook.unshift({id:Date.now(),t:$("#nbType").value,s:$("#nbSubj").value,what,fix:$("#nbFix").value.trim(),d:key(today0())});
+  save();$("#nbWhat").value="";$("#nbFix").value="";refresh();toast("Saved to your notebook. +15 XP")};
+function renderNB(){
+  $("#nbFilters").innerHTML=["all",...NBS].map(x=>`<button aria-pressed="${nbFilter===x}" data-f="${x}">${x==="all"?"All":SUBJ[x].short}</button>`).join("");
+  $("#nbFilters").querySelectorAll("button").forEach(b=>b.onclick=()=>{nbFilter=b.dataset.f;renderNB()});
+  const list=S.notebook.filter(n=>SUBJ[n.s]&&(nbFilter==="all"||n.s===nbFilter));
+  const TL={mistake:"Mistake",formula:"Formula",insight:"Insight"};
+  $("#nbList").innerHTML=list.length?`<div class="panel">${list.map(n=>`<div class="entry" style="--c:${SUBJ[n.s].c}">
+    <div class="meta"><span><b>${SUBJ[n.s].short}</b>  ${TL[n.t]}, ${fmtDate(new Date(n.d+"T00:00"))}</span><button class="del" data-id="${n.id}">Delete</button></div>
+    <p>${esc(n.what)}</p>${n.fix?`<p class="fix">${esc(n.fix)}</p>`:""}</div>`).join("")}</div>`
+    :`<p class="muted" style="margin-top:12px">Nothing here yet. After your next assignment, add the first question you got wrong.</p>`;
+  $("#nbList").querySelectorAll(".del").forEach(b=>b.onclick=()=>{if(!confirm("Delete this entry?"))return;S.notebook=S.notebook.filter(n=>n.id!=b.dataset.id);save();refresh()});
+}
+$("#exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify(S,null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`study-moon-backup-${key(today0())}.json`;document.body.appendChild(a);a.click();a.remove();toast("Backup downloaded.")};
+$("#importFile").onchange=e=>{const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.checks)throw 0;if(!confirm("Replace all your progress with this backup?"))return;S=normalise(d);save();renderAll(true);toast("Backup loaded.")}catch(err){toast("That file isn't a Study Moon backup.")}};r.readAsText(file);e.target.value=""};
+
+/* ======================= NAV + RENDER ======================= */
+function show(v){
+  document.querySelectorAll("section.view").forEach(s=>s.classList.toggle("on",s.id==="view-"+v));
+  document.querySelectorAll("nav.tabs button").forEach(b=>{if(b.dataset.view===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  if(v==="plan")renderPlan(); if(v==="focus"){renderChips();paintTimer();renderLog()} if(v==="notebook")renderNB(); if(v==="trophies")renderTrophies();
+  history.replaceState(null,"","#"+v);
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{show(b.dataset.view);window.scrollTo({top:0})});
+function refresh(){celebrate(false);renderHero();renderDay();renderPlan();renderLog();renderNB();renderTrophies()}
+function renderAll(silent){celebrate(silent);renderHero();renderDay();renderPlan();renderChips();paintTimer();renderLog();renderNB();renderTrophies()}
+renderAll(true);
+const h=location.hash.slice(1); if(["plan","focus","notebook","tips","trophies"].includes(h)) show(h);
+setInterval(()=>{if($("#view-today").classList.contains("on")&&document.activeElement.tagName!=="INPUT")renderTimetable()},60000);
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){ flush(); return; }
+  renderHero();renderTimetable();paintTimer();
+  if(SYNC_URL&&!dirty) pull();
+});
+pull();
+</script>
+</body>
+</html>
