@@ -150,7 +150,16 @@ textarea{min-height:76px;resize:vertical}
 .drow .d{font-weight:700;line-height:1.1}
 .drow .d small{display:block;font-weight:500;color:var(--dim);font-size:.78rem}
 .drow .ph{font-size:.93rem}
-.drow .ph small{display:block;color:var(--dim);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
+.drow{align-items:start}
+.drow .ring,.drow>span:last-child{margin-top:2px}
+.tlines{display:block;margin-top:5px}
+.tlines span{display:block;font-size:.82rem;color:var(--dim);line-height:1.35;margin-top:3px}
+.tlines b{font-weight:700;color:var(--c);margin-right:5px}
+.tlines .dn{text-decoration:line-through;text-decoration-color:rgba(237,230,211,.3);color:var(--faint)}
+.syl{display:grid;gap:8px;margin:4px 0 14px;padding:12px 14px;border-radius:14px;background:rgba(28,32,70,.45);border:1px solid var(--line)}
+@media(min-width:700px){.syl{grid-template-columns:1fr 1fr}}
+.syl div{font-size:.88rem;line-height:1.4}
+.syl b{display:block;font-size:.78rem;color:var(--c)}
 .ring{width:34px;height:34px}
 .chip{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:1px}
 
@@ -207,7 +216,35 @@ footer{margin-top:40px;text-align:center;color:var(--faint);font-size:.85rem;fon
 /* ---------- game layer ---------- */
 .sdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:var(--faint)}
 .sdot.ok{background:var(--done)}.sdot.busy{background:var(--ca)}.sdot.err{background:var(--mock)}
-@media(max-width:759px){nav.tabs button{padding:6px 2px;font-size:.68rem}}
+@media(max-width:759px){nav.tabs button{padding:6px 1px;font-size:.62rem}}
+.ls{display:none}
+@media(max-width:759px){.ll{display:none}.ls{display:inline}}
+/* assignments */
+.asg{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:13px 2px;border-top:1px solid var(--line)}
+.asg:first-child{border-top:0}
+.asg .sd{width:10px;height:10px;border-radius:50%;margin-top:7px;background:var(--c)}
+.asg .at{font-weight:600;line-height:1.35}
+.asg .at small{font-weight:700;color:var(--c);font-size:.78rem;margin-right:6px}
+.asg .due{font-size:.86rem;color:var(--dim)}
+.asg .due.over{color:var(--mock);font-weight:700}
+.asg .due.soon{color:var(--ca);font-weight:700}
+.asg .due.ok{color:var(--done)}
+.asg .ctl{grid-column:2;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.asg .ctl input[type=date],.asg .ctl input[type=time],.asg .ctl input[type=number]{width:auto;padding:6px 8px;font-size:.84rem;border-radius:10px;background:rgba(28,32,70,.55);border:1px solid var(--line2);color:var(--moon);color-scheme:dark}
+.asg .ctl input[type=number]{width:78px}
+.asg.sub .at{color:var(--dim)}
+.grp{font-size:.8rem;font-weight:700;letter-spacing:.02em;color:var(--dim);margin:18px 0 2px}
+.grp:first-child{margin-top:4px}
+.elig{width:100%;border-collapse:collapse;font-size:.9rem}
+.elig th{font-size:.75rem;color:var(--dim);font-weight:600;text-align:center;padding:4px}
+.elig th:first-child,.elig td:first-child{text-align:left}
+.elig td{padding:9px 4px;border-top:1px solid var(--line);text-align:center;font-variant-numeric:tabular-nums}
+.elig .y{color:var(--done);font-weight:700}.elig .n{color:var(--mock);font-weight:700}.elig .w{color:var(--faint)}
+.af{display:grid;gap:10px}
+.af .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input[type=date]{background:rgba(28,32,70,.55);border:1px solid var(--line2);border-radius:12px;padding:9px 10px;color:var(--moon);color-scheme:dark;width:100%}
+.mini{border:1px solid var(--line2);background:transparent;border-radius:10px;padding:6px 12px;font-size:.84rem;font-weight:600}
+.mini.go{background:var(--done);color:#1C2046;border-color:transparent}
 .lvl{margin-top:14px;max-width:420px}
 .lvl .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .lvl .name{font-family:var(--serif);font-size:1.35rem;font-weight:600}
@@ -280,6 +317,7 @@ input[type=time]{background:rgba(28,32,70,.55);border:1px solid var(--line2);bor
     <nav class="tabs" aria-label="Sections">
       <button data-view="today" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>Today</button>
       <button data-view="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Plan</button>
+      <button data-view="assign"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 11l2 2 4-4M8.5 17h7"/></svg><span class="ll">Assignments</span><span class="ls">Assign</span></button>
       <button data-view="focus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg>Focus</button>
       <button data-view="trophies"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 14v4M8.5 20.5h7"/></svg>Trophies</button>
       <button data-view="notebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3.5h11a1.5 1.5 0 0 1 1.5 1.5v14a1.5 1.5 0 0 1-1.5 1.5H6z"/><path d="M6 3.5v17M9.5 8h5.5M9.5 11.5h5.5"/></svg>Notebook</button>
@@ -348,6 +386,10 @@ input[type=time]{background:rgba(28,32,70,.55);border:1px solid var(--line2);bor
       <div class="stack">
         <div class="nugget" id="nugget"></div>
         <div class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><h3>Due soon</h3><button class="linkbtn" id="toAsg">All assignments</button></div>
+          <div id="dueSoon"></div>
+        </div>
+        <div class="panel">
           <h3>My timetable</h3>
           <p class="muted" style="font-size:.9rem">Your day, your way. Add anything with a time and it lines up as a timetable. Each finished item is 10 XP.</p>
           <div class="nowcard" id="nowCard"></div>
@@ -377,6 +419,43 @@ input[type=time]{background:rgba(28,32,70,.55);border:1px solid var(--line2);bor
       <div class="subjbars" id="subjBars"></div>
     </div>
     <div id="weeks"></div>
+  </section>
+
+  <!-- ASSIGNMENTS -->
+  <section class="view" id="view-assign">
+    <div class="grid2">
+      <div class="panel">
+        <h2>Assignments</h2>
+        <p class="muted">Every assignment with its due date and a live countdown. Submitting earns 40 XP, and a full day early earns 20 more.</p>
+        <div id="asList"></div>
+      </div>
+      <div class="stack">
+        <div class="panel">
+          <h3>Add an assignment</h3>
+          <form class="af" id="asForm" autocomplete="off">
+            <div class="two">
+              <select id="asSubj" aria-label="Subject"></select>
+              <select id="asWeek" aria-label="Week">
+                <option value="1">Week 1</option><option value="2">Week 2</option><option value="3">Week 3</option><option value="4">Week 4</option><option value="0">Other</option>
+              </select>
+            </div>
+            <input type="text" id="asTitle" aria-label="Title (optional)" placeholder="Title (optional), like Graded assignment" maxlength="100">
+            <div class="two">
+              <input type="date" id="asDate" aria-label="Due date">
+              <input type="time" id="asTime" aria-label="Due time" value="23:59">
+            </div>
+            <div><button class="btn small" type="submit">Add assignment</button></div>
+          </form>
+          <div id="asQuick" style="margin-top:14px"></div>
+        </div>
+        <div class="panel">
+          <h3>Eligibility check</h3>
+          <p class="muted" style="font-size:.9rem">IITM averages your best 2 of the Week 1 to 3 scores in each subject. You need at least 40% in every subject to sit the qualifier. Enter scores as results come in.</p>
+          <div style="overflow-x:auto"><table class="elig" id="elig"></table></div>
+          <p class="muted" style="font-size:.85rem;margin-top:10px" id="eligSum"></p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- FOCUS -->
@@ -447,6 +526,7 @@ input[type=time]{background:rgba(28,32,70,.55);border:1px solid var(--line2);bor
             <li>Notebook entries: 15 XP each, up to 5 a day</li>
             <li>One line about today: 10 XP</li>
             <li>Mocks: 160 XP each, plus 40 for the analysis</li>
+            <li>Assignments: 40 XP when submitted, 20 more if a full day early</li>
           </ul>
         </div>
       </div>
@@ -497,7 +577,7 @@ input[type=time]{background:rgba(28,32,70,.55);border:1px solid var(--line2);bor
         <ul>
           <li>Treat weeks 1, 2 and 3 assignments like mini exams. A weak score in one subject can block the whole exam even if the other three are great.</li>
           <li>Submit a day before the deadline, never on the last night. Portals slow down when everyone rushes.</li>
-          <li>Check the real deadlines on the portal in week 1 and move the Thursday assignment days in this plan if they differ.</li>
+          <li>Check the real deadlines on the portal in week 1 and add every one to the Assignments tab with its due date. The countdown does the remembering for you.</li>
           <li>Do the week 4 assignment too. It doesn't count for eligibility, but it is the best practice you'll get.</li>
         </ul>
       </details>
@@ -647,6 +727,14 @@ const LEARN = {
     e:["Speaking: introductions and greetings","Conversational phrases","Fluency and clarity","Speaking practice out loud","Week 4 practice questions"]}
 };
 
+/* Week syllabus as given on her sheet */
+const WEEK_SYL = {
+ 1:{m:"Set Theory",s:"Introduction and types of data, descriptive and inferential statistics, scales of measurement",ct:"Variables, initialization, iterators, filtering, datatypes, flowcharts, sanity of data",e:"Sounds and words"},
+ 2:{m:"Rectangular coordinate system, straight lines",s:"Describing categorical data: frequency distribution, graphing best practices, mode and median",ct:"Iteration, filtering, selection, pseudocode, finding max and min, AND operator",e:"Parts of speech"},
+ 3:{m:"Quadratic functions",s:"Describing numerical data: frequency tables, measures of central tendency",ct:"Multiple non nested iterations, three prizes problem, procedures, parameters, side effects, OR operator",e:"Sentences"},
+ 4:{m:"Algebra of polynomials",s:"Association between two variables",ct:"Nested iterations, birthday paradox, binning",e:"Speaking skills"}
+};
+
 /* ======================= BUILD DAYS ======================= */
 function key(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function T(id,subj,label,mins){return {id,subj,label,mins,xp:Math.max(10,Math.round(mins*2/3/5)*5)}}
@@ -654,7 +742,7 @@ function iitm(ct,m,s,e,mins){mins=mins||[60,45,45,30];return [T("ct","ct",ct,min
 const SUNMINS=[30,20,20,20];
 const DAYS = [];
 (function(){
-  let d = new Date(2026,9,2);
+  let d = new Date(2026,9,6);
   for(let w=1; w<=4; w++){
     let li=0;
     for(let k=0;k<7;k++){
@@ -662,7 +750,7 @@ const DAYS = [];
       if(wd===0){
         day={kind:"sunday",phase:`Week ${w}: Sunday recap`,
           tasks:iitm("Recap this week's CT; redo lecture examples","Recap this week's Maths","Recap this week's Stats","Update formula sheet and mistake notebook",SUNMINS)};
-      } else if(wd===4){
+      } else if(k===6){
         day={kind:"assign",phase:`Week ${w}: Assignment day`,
           note: w<=3 ? "This week's assignments count towards exam eligibility. Aim well above 40% in every subject." : "Week 4 doesn't count for eligibility, but it's your best practice before revision.",
           tasks:iitm(`Submit Week ${w} CT assignment; redo any errors`,`Submit Week ${w} Maths assignment`,`Submit Week ${w} Stats assignment`,`Submit Week ${w} English assignment`)};
@@ -679,17 +767,13 @@ const DAYS = [];
   const rev=[
     R("rev","Revise Week 1",iitm("Revise Week 1 CT","Revise Week 1 Maths","Revise Week 1 Stats","Revise Week 1 English")),
     R("rev","Revise Week 2",iitm("Revise Week 2 CT","Revise Week 2 Maths","Revise Week 2 Stats","Revise Week 2 English")),
-    R("sunday","Sunday: formula sheets",iitm("Recap Weeks 1 and 2 CT","Formula sheet: Maths weeks 1 to 4","Formula sheet: Stats weeks 1 to 4","Read through the mistake notebook",SUNMINS)),
     R("rev","Revise Week 3",iitm("Revise Week 3 CT","Revise Week 3 Maths","Revise Week 3 Stats","Revise Week 3 English")),
     R("rev","Revise Week 4",iitm("Revise Week 4 CT","Revise Week 4 Maths","Revise Week 4 Stats","Revise Week 4 English")),
-    R("rev","CT drill day",iitm("Pseudocode tracing drill across all four weeks","Mixed problems","Mixed problems","Quick grammar quiz",[90,45,45,30]),"CT gets 90 minutes today. Trace, trace, trace."),
     MOCK(1),
-    R("rev","Mock 1 fixes",iitm("Fix CT mistakes from Mock 1","Fix Maths mistakes","Fix Stats mistakes","Fix English mistakes")),
-    R("rev","Previous year questions",iitm("CT previous year questions","Maths previous year questions","Stats previous year questions","English previous year questions")),
-    R("sunday","Sunday: weak topics",iitm("List your weakest CT topics","List your weakest Maths topics","List your weakest Stats topics","Light reading",SUNMINS)),
+    R("sunday","Sunday: Mock 1 fixes",iitm("Fix CT mistakes from Mock 1","Formula sheet: Maths weeks 1 to 4","Formula sheet: Stats weeks 1 to 4","Fix English mistakes from Mock 1",[45,30,30,20])),
+    R("rev","CT drill and past papers",iitm("Pseudocode tracing drill across all four weeks","Maths previous year questions","Stats previous year questions","English previous year questions",[90,45,45,30]),"CT gets 90 minutes today. Trace, trace, trace."),
     MOCK(2),
-    R("rev","Mock 2 fixes",iitm("Fix CT mistakes from Mock 2","Fix Maths mistakes","Fix Stats mistakes","Fix English mistakes")),
-    R("rev","Weak topics",iitm("Hardest CT topics again: nested loops, procedures","Hardest Maths topics","Hardest Stats topics","Pronunciation and grammar rules")),
+    R("rev","Mock 2 fixes and weak topics",iitm("Fix CT mistakes from Mock 2; nested loops and procedures again","Fix Maths mistakes; hardest topics","Fix Stats mistakes; hardest topics","Pronunciation and grammar rules")),
     MOCK(3),
     R("taper","Final polish",iitm("Mock 3 fixes; write a one page CT summary","Maths formula sheet only","Stats formula sheet only","Mistake notebook only"),"Keep today light so you arrive rested."),
     R("light","Day before the exam",[T("ct","ct","Skim your one page CT summary",30),T("m","m","Skim the Maths formula sheet",20),T("s","s","Skim the Stats formula sheet",20),T("e","e","Read the mistake notebook once",20),T("pack","exam","Pack hall ticket, ID and everything the hall ticket asks for",15)],"No new topics today. Early night."),
@@ -746,12 +830,12 @@ const NUGGETS = [
  "Almost full moon. Look at everything you've done.",
  "Tonight: pack your bag, drink water, sleep early.",
  "You've done the work. Walk in knowing it.",
- "Whatever happens today, you showed up for 45 days straight. That's the real result."
+ "Whatever happens today, you showed up for every single day of this plan. That's the real result."
 ];
 
 /* ======================= STORAGE + CLOUD SYNC ======================= */
-const BLANK = () => ({checks:{}, notes:{}, notebook:[], focus:[], todos:{}, timer:null, meta:{level:null,badges:{}}, updatedAt:0});
-function normalise(x){const o=Object.assign(BLANK(),x||{});o.meta=Object.assign({level:null,badges:{}},o.meta||{});o.todos=o.todos||{};return o}
+const BLANK = () => ({checks:{}, notes:{}, notebook:[], focus:[], todos:{}, asg:[], timer:null, meta:{level:null,badges:{}}, updatedAt:0});
+function normalise(x){const o=Object.assign(BLANK(),x||{});o.meta=Object.assign({level:null,badges:{}},o.meta||{});o.todos=o.todos||{};o.asg=o.asg||[];return o}
 let S = BLANK();
 try{ const raw=localStorage.getItem(STORE); if(raw) S=normalise(JSON.parse(raw)); }catch(e){}
 let syncT=null, retryT=null, dirty=false, pulled=!SYNC_URL;
@@ -860,6 +944,7 @@ function xpBreakdown(){
   Object.values(S.todos).forEach(list=>{x+=Math.min(10,list.filter(t=>t.done).length)*10});
   const nbDay={};S.notebook.forEach(n=>nbDay[n.d]=(nbDay[n.d]||0)+1);Object.values(nbDay).forEach(c=>x+=Math.min(5,c)*15);
   Object.values(S.notes).forEach(n=>{if((n||"").trim().length>=8)x+=10});
+  S.asg.forEach(a=>{if(a.sub){x+=40;if(asEarly(a))x+=20}});
   return x;
 }
 function levelOf(x){let l=0;LEVELS.forEach(([t],i)=>{if(x>=t)l=i});const cur=LEVELS[l][0],nxt=LEVELS[l+1]?LEVELS[l+1][0]:null;return {l:l+1,name:LEVELS[l][1],cur,nxt,x}}
@@ -875,7 +960,9 @@ const BADGES=[
  {id:"w2",ic:"2️⃣",n:"Week 2 cleared",d:"Every task in week 2 done",f:()=>weekDone(2)},
  {id:"w3",ic:"3️⃣",n:"Week 3 cleared",d:"Every task in week 3 done",f:()=>weekDone(3)},
  {id:"w4",ic:"4️⃣",n:"Week 4 cleared",d:"Every task in week 4 done",f:()=>weekDone(4)},
- {id:"gate",ic:"🔓",n:"Gate unlocked",d:"All assignments for weeks 1 to 3 submitted",f:()=>tasksWhere(d=>d.kind==="assign"&&d.week<=3)},
+ {id:"gate",ic:"🔓",n:"Gate unlocked",d:"All assignments for weeks 1 to 3 submitted",f:()=>tasksWhere(d=>d.kind==="assign"&&d.week<=3)||ASUB.every(s=>[1,2,3].every(w=>S.asg.some(a=>a.subj===s&&a.week===w&&a.sub)))},
+ {id:"early3",ic:"⏰",n:"Ahead of time",d:"Submit 3 assignments a full day early",f:()=>S.asg.filter(asEarly).length>=3},
+ {id:"elig",ic:"🎓",n:"Eligible",d:"Above 40% in all four subjects",f:()=>eligibility().every(r=>r.ok)},
  {id:"loop",ic:"🔁",n:"Loop master",d:"Every CT task in weeks 1 to 4 done",f:()=>tasksWhere((d,t)=>t.subj==="ct"&&typeof d.week==="number")},
  {id:"deep",ic:"🧘",n:"Deep diver",d:"Finish a 60 minute focus session",f:()=>S.focus.some(f=>f.m>=60&&SUBJ[f.s])},
  {id:"mara",ic:"🏃",n:"Marathon mind",d:"10 hours of focus sessions in total",f:()=>S.focus.filter(f=>SUBJ[f.s]).reduce((a,f)=>a+f.m,0)>=600},
@@ -912,6 +999,91 @@ function showLevelUp(lv){
   for(let i=0;i<3;i++) setTimeout(()=>sparkle(innerWidth/2,innerHeight/2,20),i*250);
 }
 
+/* ======================= ASSIGNMENTS ======================= */
+const ASUB=["ct","m","s","e"];
+function asDue(a){if(!a.due)return null;const [y,m,d]=a.due.split("-").map(Number);const [hh,mm]=(a.time||"23:59").split(":").map(Number);return new Date(y,m-1,d,hh,mm)}
+function asTitle(a){return a.title||(a.week>0?`Week ${a.week} graded assignment`:"Assignment")}
+function asEarly(a){const d=asDue(a);return a.sub&&a.subAt&&d&&(d-a.subAt)>=864e5}
+function dueText(a){
+  const d=asDue(a);if(!d)return {t:"No due date yet",c:""};
+  const when=d.toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short"})+", "+fmtHM(a.time||"23:59");
+  if(a.sub)return {t:`Submitted${asEarly(a)?" early":""}. Was due ${when}`,c:"ok"};
+  const ms=d-Date.now(),h=Math.round(Math.abs(ms)/36e5),dd=Math.floor(Math.abs(ms)/864e5);
+  if(ms<0)return {t:`Overdue by ${dd?dd+(dd===1?" day":" days"):h+(h===1?" hour":" hours")}. Was due ${when}`,c:"over"};
+  if(ms<864e5)return {t:`Due in ${Math.max(1,h)} ${h===1?"hour":"hours"}, ${when}`,c:"soon"};
+  const n=Math.ceil(ms/864e5);return {t:`Due in ${n} days, ${when}`,c:n<=3?"soon":""};
+}
+function eligibility(){
+  return ASUB.map(s=>{
+    const by={1:null,2:null,3:null};
+    S.asg.filter(a=>a.subj===s&&a.week>=1&&a.week<=3&&a.score!==""&&a.score!=null&&!isNaN(+a.score)).forEach(a=>{by[a.week]=Math.max(by[a.week]??-1,+a.score)});
+    const sc=[1,2,3].map(w=>by[w]).filter(v=>v!=null).sort((a,b)=>b-a).slice(0,2);
+    const avg=sc.length?sc.reduce((a,b)=>a+b,0)/sc.length:null;
+    return {s,by,avg,n:sc.length,ok:sc.length===2&&avg>=40};
+  });
+}
+function asgRow(a){
+  const sj=SUBJ[a.subj],dt=dueText(a);
+  return `<div class="asg${a.sub?" sub":""}" style="--c:${sj.c}">
+    <span class="sd"></span>
+    <div><div class="at"><small>${sj.short}</small>${esc(asTitle(a))}</div><div class="due ${dt.c}">${esc(dt.t)}</div></div>
+    <div class="ctl">
+      ${a.sub?`<label class="muted" style="font-size:.84rem">Score <input type="number" min="0" max="100" step="0.5" data-score="${a.id}" value="${a.score??""}" placeholder="%"></label><button class="mini" data-unsub="${a.id}">Undo submit</button>`
+             :`<button class="mini go" data-sub="${a.id}">Mark submitted</button>`}
+      ${a.sub?"":`<input type="date" data-date="${a.id}" value="${a.due||""}" aria-label="Due date for ${esc(asTitle(a))}">
+      <input type="time" data-time="${a.id}" value="${a.time||"23:59"}" aria-label="Due time">`}
+      <button class="del" data-adel="${a.id}">Delete</button>
+    </div></div>`;
+}
+function bindAsg(root){
+  const find=id=>S.asg.find(a=>a.id==id);
+  root.querySelectorAll("[data-sub]").forEach(b=>b.onclick=()=>{const a=find(b.dataset.sub);a.sub=true;a.subAt=Date.now();
+    const r=b.getBoundingClientRect();sparkle(r.left+40,r.top,14);save();refresh();toast(asEarly(a)?"Submitted a day early. +60 XP!":"Submitted. +40 XP!")});
+  root.querySelectorAll("[data-unsub]").forEach(b=>b.onclick=()=>{const a=find(b.dataset.unsub);a.sub=false;a.subAt=null;save();refresh()});
+  root.querySelectorAll("[data-date]").forEach(i=>i.onchange=()=>{find(i.dataset.date).due=i.value;save();refresh()});
+  root.querySelectorAll("[data-time]").forEach(i=>i.onchange=()=>{find(i.dataset.time).time=i.value||"23:59";save();refresh()});
+  root.querySelectorAll("[data-score]").forEach(i=>i.onchange=()=>{let v=i.value===""?"":Math.max(0,Math.min(100,+i.value));find(i.dataset.score).score=v;save();refresh()});
+  root.querySelectorAll("[data-adel]").forEach(b=>b.onclick=()=>{if(!confirm("Delete this assignment?"))return;S.asg=S.asg.filter(a=>a.id!=b.dataset.adel);save();refresh()});
+}
+function renderAsg(){
+  const now=Date.now(),open=S.asg.filter(a=>!a.sub);
+  const byDue=(a,b)=>(asDue(a)||Infinity)-(asDue(b)||Infinity)||a.subj.localeCompare(b.subj);
+  const groups=[
+    ["Overdue",open.filter(a=>asDue(a)&&asDue(a)<now).sort(byDue)],
+    ["Due in the next 3 days",open.filter(a=>asDue(a)&&asDue(a)>=now&&asDue(a)-now<=3*864e5).sort(byDue)],
+    ["Coming up",open.filter(a=>asDue(a)&&asDue(a)-now>3*864e5).sort(byDue)],
+    ["No due date yet",open.filter(a=>!asDue(a)).sort((a,b)=>a.week-b.week||ASUB.indexOf(a.subj)-ASUB.indexOf(b.subj))],
+    ["Submitted",S.asg.filter(a=>a.sub).sort((a,b)=>(b.subAt||0)-(a.subAt||0))]
+  ].filter(g=>g[1].length);
+  $("#asList").innerHTML=groups.length?groups.map(([g,l])=>`<div class="grp">${g} (${l.length})</div>`+l.map(asgRow).join("")).join("")
+    :`<div class="empty">No assignments yet. Add one on the right, or set up all sixteen in one tap.</div>`;
+  bindAsg($("#asList"));
+  $("#asQuick").innerHTML=S.asg.some(a=>a.week>=1&&a.week<=4)?"":`<button class="btn small ghost" id="asSeed">Add Weeks 1 to 4 for all four subjects</button><p class="muted" style="font-size:.84rem;margin:6px 0 0">Creates 16 assignments. Then just fill in each due date from the portal.</p>`;
+  if($("#asSeed"))$("#asSeed").onclick=()=>{let id=Date.now();[1,2,3,4].forEach(w=>ASUB.forEach(s=>S.asg.push({id:id++,subj:s,week:w,title:"",due:"",time:"23:59",sub:false,score:""})));save();refresh();toast("16 assignments added. Now set their due dates.")};
+  const el=eligibility();
+  $("#elig").innerHTML=`<tr><th>Subject</th><th>W1</th><th>W2</th><th>W3</th><th>Best 2 avg</th><th></th></tr>`+el.map(r=>`<tr>
+    <td><span class="chip" style="background:${SUBJ[r.s].c}"></span>${SUBJ[r.s].short}</td>
+    ${[1,2,3].map(w=>`<td>${r.by[w]==null?`<span class="w">·</span>`:r.by[w]}</td>`).join("")}
+    <td>${r.avg==null?`<span class="w">·</span>`:r.avg.toFixed(1)+"%"}</td>
+    <td>${r.n<2?`<span class="w">${r.n?"needs 1 more":"waiting"}</span>`:r.ok?`<span class="y">✓ Safe</span>`:`<span class="n">Below 40</span>`}</td></tr>`).join("");
+  const safe=el.filter(r=>r.ok).length;
+  $("#eligSum").textContent=safe===4?"All four subjects are above 40%. You're eligible for the qualifier!":`${safe} of 4 subjects confirmed safe so far.`;
+}
+function renderDueSoon(){
+  const now=Date.now();
+  const l=S.asg.filter(a=>!a.sub&&asDue(a)).sort((a,b)=>asDue(a)-asDue(b)).slice(0,3);
+  const nodate=S.asg.filter(a=>!a.sub&&!asDue(a)).length;
+  $("#dueSoon").innerHTML=l.length?l.map(asgRow).join(""):`<p class="muted" style="font-size:.92rem;margin:6px 0 0">${S.asg.length?"Nothing with a due date pending. Lovely.":"Add your assignments and their due dates, and the nearest ones show up here."}</p>`;
+  if(nodate&&l.length<3) $("#dueSoon").innerHTML+=`<p class="muted" style="font-size:.84rem;margin:10px 0 0">${nodate} ${nodate===1?"assignment needs":"assignments need"} a due date.</p>`;
+  bindAsg($("#dueSoon"));
+}
+$("#asSubj").innerHTML=ASUB.map(s=>`<option value="${s}">${SUBJ[s].name}</option>`).join("");
+$("#asForm").onsubmit=e=>{e.preventDefault();
+  if(!$("#asDate").value){toast("Pick a due date first.");return}
+  S.asg.push({id:Date.now(),subj:$("#asSubj").value,week:+$("#asWeek").value,title:$("#asTitle").value.trim(),due:$("#asDate").value,time:$("#asTime").value||"23:59",sub:false,score:""});
+  $("#asTitle").value="";save();refresh();toast("Assignment added.")};
+$("#toAsg").onclick=()=>{show("assign");window.scrollTo({top:0})};
+
 /* ======================= MOON ======================= */
 function drawMoon(f){
   f=Math.max(0,Math.min(1,f)); const cx=120,cy=120,r=86;
@@ -936,7 +1108,7 @@ function renderHero(){
   $("#hello").textContent=`${greet}, ${NAME}.`;
   const t0=today0(), days=Math.round((EXAM-t0)/864e5);
   let html;
-  if(t0<DAYS[0].date){const s=Math.round((DAYS[0].date-t0)/864e5);html=`${s} ${s===1?"day":"days"}<span>until Week 1 begins on Friday, 2 October</span>`}
+  if(t0<DAYS[0].date){const s=Math.round((DAYS[0].date-t0)/864e5);html=`${s} ${s===1?"day":"days"}<span>until Week 1 begins on ${fmtDate(DAYS[0].date,true)}</span>`}
   else if(days>1) html=`${days} days<span>to your qualifier on Sunday, 15 November</span>`;
   else if(days===1) html=`Tomorrow<span>is the qualifier. You're ready.</span>`;
   else if(days===0) html=`Today<span>is the day. Go shine.</span>`;
@@ -977,7 +1149,7 @@ function renderDay(){
   $("#dayBar").style.width=(st.tot?st.dn/st.tot*100:0)+"%";
   $("#dayFrac").textContent=`${st.cnt} of ${st.n} done`;
   if(document.activeElement!==$("#reflect")) $("#reflect").value=S.notes[k]||"";
-  $("#nugget").innerHTML=`<q>${esc(NUGGETS[sel%NUGGETS.length])}</q><div class="by">Thought for ${sel===todayIdx()?"today":fmtDate(d.date)}</div>`;
+  $("#nugget").innerHTML=`<q>${esc(NUGGETS[sel>=DAYS.length-4?NUGGETS.length-(DAYS.length-sel):Math.min(sel,NUGGETS.length-5)])}</q><div class="by">Thought for ${sel===todayIdx()?"today":fmtDate(d.date)}</div>`;
   renderQuests(); renderTimetable();
 }
 function renderQuests(){
@@ -1038,9 +1210,10 @@ function renderPlan(){
       const st=dayStats(i),f=st.tot?st.dn/st.tot:0;
       return `<button class="drow${started&&i===ti?" today":""}" data-i="${i}">
         <span class="d">${d.date.getDate()} ${d.date.toLocaleDateString("en-IN",{month:"short"})}<small>${d.date.toLocaleDateString("en-IN",{weekday:"short"})}</small></span>
-        <span class="ph"><span class="chip" style="background:${KIND[d.kind].c}"></span>${esc(d.phase)}<small>${esc(d.tasks[0].label)}</small></span>
+        <span class="ph"><span class="chip" style="background:${KIND[d.kind].c}"></span>${esc(d.phase)}<span class="tlines">${d.tasks.map(t=>`<span class="${isDone(key(d.date),t.id)?"dn":""}" style="--c:${SUBJ[t.subj].c}"><b>${SUBJ[t.subj].short}</b>${esc(t.label)}</span>`).join("")}</span></span>
         ${f>=1?`<span style="font-size:1.5rem" aria-label="Complete">🌕</span>`:ringSvg(f,"var(--ct)")}</button>`}).join("");
-    return `<div class="week panel"><h3>${g}${cleared?" 🏅":""}</h3>${rows}</div>`;
+    const wn=idx[0][0].week, sy=typeof wn==="number"?`<div class="syl">${["m","s","ct","e"].map(k=>`<div style="--c:${SUBJ[k].c}"><b>${SUBJ[k].name}</b>${esc(WEEK_SYL[wn][k])}</div>`).join("")}</div>`:"";
+    return `<div class="week panel"><h3>${g}${cleared?" 🏅":""}</h3>${sy}${rows}</div>`;
   }).join("");
   $("#weeks").querySelectorAll(".drow").forEach(b=>b.onclick=()=>{sel=+b.dataset.i;show("today");renderDay();window.scrollTo({top:0})});
 }
@@ -1126,15 +1299,15 @@ $("#importFile").onchange=e=>{const file=e.target.files[0];if(!file)return;const
 function show(v){
   document.querySelectorAll("section.view").forEach(s=>s.classList.toggle("on",s.id==="view-"+v));
   document.querySelectorAll("nav.tabs button").forEach(b=>{if(b.dataset.view===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
-  if(v==="plan")renderPlan(); if(v==="focus"){renderChips();paintTimer();renderLog()} if(v==="notebook")renderNB(); if(v==="trophies")renderTrophies();
+  if(v==="plan")renderPlan(); if(v==="assign")renderAsg(); if(v==="focus"){renderChips();paintTimer();renderLog()} if(v==="notebook")renderNB(); if(v==="trophies")renderTrophies();
   history.replaceState(null,"","#"+v);
 }
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{show(b.dataset.view);window.scrollTo({top:0})});
-function refresh(){celebrate(false);renderHero();renderDay();renderPlan();renderLog();renderNB();renderTrophies()}
-function renderAll(silent){celebrate(silent);renderHero();renderDay();renderPlan();renderChips();paintTimer();renderLog();renderNB();renderTrophies()}
+function refresh(){celebrate(false);renderHero();renderDay();renderAsg();renderDueSoon();renderPlan();renderLog();renderNB();renderTrophies()}
+function renderAll(silent){celebrate(silent);renderHero();renderDay();renderAsg();renderDueSoon();renderPlan();renderChips();paintTimer();renderLog();renderNB();renderTrophies()}
 renderAll(true);
-const h=location.hash.slice(1); if(["plan","focus","notebook","tips","trophies"].includes(h)) show(h);
-setInterval(()=>{if($("#view-today").classList.contains("on")&&document.activeElement.tagName!=="INPUT")renderTimetable()},60000);
+const h=location.hash.slice(1); if(["plan","assign","focus","notebook","tips","trophies"].includes(h)) show(h);
+setInterval(()=>{if(document.activeElement.tagName==="INPUT")return;if($("#view-today").classList.contains("on")){renderTimetable();renderDueSoon()}if($("#view-assign").classList.contains("on"))renderAsg()},60000);
 document.addEventListener("visibilitychange",()=>{
   if(document.hidden){ flush(); return; }
   renderHero();renderTimetable();paintTimer();
