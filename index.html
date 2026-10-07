@@ -738,11 +738,11 @@ const WEEK_SYL = {
 /* ======================= BUILD DAYS ======================= */
 function key(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function T(id,subj,label,mins){return {id,subj,label,mins,xp:Math.max(10,Math.round(mins*2/3/5)*5)}}
-function iitm(ct,m,s,e,mins){mins=mins||[60,45,45,30];return [T("ct","ct",ct,mins[0]),T("m","m",m,mins[1]),T("s","s",s,mins[2]),T("e","e",e,mins[3])]}
-const SUNMINS=[30,20,20,20];
+function iitm(ct,m,s,e,mins){mins=mins||[60,60,60,60];return [T("ct","ct",ct,mins[0]),T("m","m",m,mins[1]),T("s","s",s,mins[2]),T("e","e",e,mins[3])]}
+const SUNMINS=[60,60,60,60];
 const DAYS = [];
 (function(){
-  let d = new Date(2026,9,6);
+  let d = new Date(2026,9,7);
   for(let w=1; w<=4; w++){
     let li=0;
     for(let k=0;k<7;k++){
@@ -770,13 +770,12 @@ const DAYS = [];
     R("rev","Revise Week 3",iitm("Revise Week 3 CT","Revise Week 3 Maths","Revise Week 3 Stats","Revise Week 3 English")),
     R("rev","Revise Week 4",iitm("Revise Week 4 CT","Revise Week 4 Maths","Revise Week 4 Stats","Revise Week 4 English")),
     MOCK(1),
-    R("sunday","Sunday: Mock 1 fixes",iitm("Fix CT mistakes from Mock 1","Formula sheet: Maths weeks 1 to 4","Formula sheet: Stats weeks 1 to 4","Fix English mistakes from Mock 1",[45,30,30,20])),
-    R("rev","CT drill and past papers",iitm("Pseudocode tracing drill across all four weeks","Maths previous year questions","Stats previous year questions","English previous year questions",[90,45,45,30]),"CT gets 90 minutes today. Trace, trace, trace."),
+    R("rev","Mock 1 fixes and past papers",iitm("Fix CT mistakes from Mock 1; pseudocode tracing drill","Fix Maths mistakes; previous year questions","Fix Stats mistakes; previous year questions","Fix English mistakes; previous year questions")),
     MOCK(2),
     R("rev","Mock 2 fixes and weak topics",iitm("Fix CT mistakes from Mock 2; nested loops and procedures again","Fix Maths mistakes; hardest topics","Fix Stats mistakes; hardest topics","Pronunciation and grammar rules")),
     MOCK(3),
     R("taper","Final polish",iitm("Mock 3 fixes; write a one page CT summary","Maths formula sheet only","Stats formula sheet only","Mistake notebook only"),"Keep today light so you arrive rested."),
-    R("light","Day before the exam",[T("ct","ct","Skim your one page CT summary",30),T("m","m","Skim the Maths formula sheet",20),T("s","s","Skim the Stats formula sheet",20),T("e","e","Read the mistake notebook once",20),T("pack","exam","Pack hall ticket, ID and everything the hall ticket asks for",15)],"No new topics today. Early night."),
+    R("light","Day before the exam",[T("ct","ct","Skim your one page CT summary",30),T("m","m","Skim the Maths formula sheet",30),T("s","s","Skim the Stats formula sheet",30),T("e","e","Read the mistake notebook once",30),T("pack","exam","Pack hall ticket, ID and everything the hall ticket asks for",15)],"No new topics today. Early night."),
     R("exam","Qualifier exam",[T("wake","exam","Light breakfast, one calm look at your summary",20),T("go","exam","Reach the centre early with hall ticket and ID",30),T("exam","exam","Write the qualifier. You're ready.",240)],"Exam timing is on your hall ticket. Follow its instructions.")
   ];
   rev.forEach(r=>{r.date=new Date(d);DAYS.push(r);d.setDate(d.getDate()+1)});
@@ -1219,8 +1218,8 @@ function renderPlan(){
 }
 
 /* ======================= FOCUS TIMER ======================= */
-const PRESETS=[["ct",60],["m",45],["s",45],["e",30],["free",25],["break",10]];
-let fsel=S.timer&&S.timer.subj&&(SUBJ[S.timer.subj]||S.timer.subj==="break")?S.timer:{subj:"ct",mins:60,endAt:null,left:60*60};
+const PRESETS=[["ct",60],["m",60],["s",60],["e",60],["free",25],["break",10]];
+let fsel=S.timer&&S.timer.subj&&(SUBJ[S.timer.subj]||S.timer.subj==="break")&&PRESETS.some(([a,b])=>a===S.timer.subj&&b===S.timer.mins)?S.timer:{subj:"ct",mins:60,endAt:null,left:60*60};
 let tick=null, actx=null;
 const fName=s=>s==="break"?"Break":SUBJ[s].name, fShort=s=>s==="break"?"Break":SUBJ[s].short, fCol=s=>s==="break"?"var(--done)":SUBJ[s].c;
 function renderChips(){
