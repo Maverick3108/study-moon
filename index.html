@@ -204,6 +204,11 @@ details ul{margin:0 0 14px;padding-left:20px}
 details li{margin-bottom:8px;max-width:68ch}
 .callout{border-left:3px solid var(--ca);padding:10px 14px;background:rgba(232,193,112,.08);border-radius:0 12px 12px 0;margin:0 0 14px}
 
+.cu{border:1px solid rgba(232,193,112,.4);background:rgba(232,193,112,.07);border-radius:14px;padding:4px 12px 8px;margin:12px 0 4px}
+.cu .cuh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:8px 2px 2px;flex-wrap:wrap}
+.cu .cuh b{color:var(--ca);font-size:.92rem}
+.cu .from{font-size:.76rem;color:var(--ca);font-weight:600}
+.cu .skip{background:none;border:0;color:var(--faint);font-size:.78rem;text-decoration:underline;padding:0;margin-top:2px}
 .sdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:var(--faint)}
 .sdot.ok{background:var(--done)}.sdot.busy{background:var(--ca)}.sdot.err{background:var(--mock)}
 footer{margin-top:40px;text-align:center;color:var(--faint);font-size:.85rem;font-family:var(--serif);font-style:italic;font-size:1.05rem}
@@ -214,7 +219,6 @@ footer{margin-top:40px;text-align:center;color:var(--faint);font-size:.85rem;fon
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 /* ---------- game layer ---------- */
-.sdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:var(--faint)}
 .sdot.ok{background:var(--done)}.sdot.busy{background:var(--ca)}.sdot.err{background:var(--mock)}
 @media(max-width:759px){nav.tabs button{padding:6px 1px;font-size:.62rem}}
 .ls{display:none}
@@ -367,6 +371,7 @@ input[type=time]{background:rgba(28,32,70,.55);border:1px solid var(--line2);bor
           <div id="backToday" style="margin:-4px 0 10px"></div>
           <div class="daybar" aria-hidden="true"><i id="dayBar"></i></div>
           <div class="muted" style="font-size:.85rem" id="dayFrac"></div>
+          <div id="catchUp"></div>
           <div id="taskList"></div>
           <div id="dayNote"></div>
         </div>
@@ -742,7 +747,7 @@ function iitm(ct,m,s,e,mins){mins=mins||[60,60,60,60];return [T("ct","ct",ct,min
 const SUNMINS=[60,60,60,60];
 const DAYS = [];
 (function(){
-  let d = new Date(2026,9,7);
+  let d = new Date(2026,9,10);
   for(let w=1; w<=4; w++){
     let li=0;
     for(let k=0;k<7;k++){
@@ -765,17 +770,14 @@ const DAYS = [];
   const R=(kind,phase,tasks,note)=>({kind,phase,tasks,note,week:"R"});
   const MOCK=n=>R("mock",`Mock test ${n}`,[T("mock","mock",`Mock ${n}: full timed paper, all four subjects`,240),T("anl","mock","Check answers and log every mistake in the notebook",60)]);
   const rev=[
-    R("rev","Revise Week 1",iitm("Revise Week 1 CT","Revise Week 1 Maths","Revise Week 1 Stats","Revise Week 1 English")),
-    R("rev","Revise Week 2",iitm("Revise Week 2 CT","Revise Week 2 Maths","Revise Week 2 Stats","Revise Week 2 English")),
-    R("rev","Revise Week 3",iitm("Revise Week 3 CT","Revise Week 3 Maths","Revise Week 3 Stats","Revise Week 3 English")),
-    R("rev","Revise Week 4",iitm("Revise Week 4 CT","Revise Week 4 Maths","Revise Week 4 Stats","Revise Week 4 English")),
+    R("rev","Revise Weeks 1 and 2",iitm("Revise Weeks 1 and 2 CT","Revise Weeks 1 and 2 Maths","Revise Weeks 1 and 2 Stats","Revise Weeks 1 and 2 English")),
+    R("rev","Revise Weeks 3 and 4",iitm("Revise Weeks 3 and 4 CT","Revise Weeks 3 and 4 Maths","Revise Weeks 3 and 4 Stats","Revise Weeks 3 and 4 English")),
     MOCK(1),
     R("rev","Mock 1 fixes and past papers",iitm("Fix CT mistakes from Mock 1; pseudocode tracing drill","Fix Maths mistakes; previous year questions","Fix Stats mistakes; previous year questions","Fix English mistakes; previous year questions")),
     MOCK(2),
-    R("rev","Mock 2 fixes and weak topics",iitm("Fix CT mistakes from Mock 2; nested loops and procedures again","Fix Maths mistakes; hardest topics","Fix Stats mistakes; hardest topics","Pronunciation and grammar rules")),
+    R("rev","Mock 2 fixes and weak topics",iitm("Fix CT mistakes from Mock 2; nested loops and procedures again","Fix Maths mistakes; formula sheet","Fix Stats mistakes; formula sheet","Pronunciation and grammar rules")),
     MOCK(3),
-    R("taper","Final polish",iitm("Mock 3 fixes; write a one page CT summary","Maths formula sheet only","Stats formula sheet only","Mistake notebook only"),"Keep today light so you arrive rested."),
-    R("light","Day before the exam",[T("ct","ct","Skim your one page CT summary",30),T("m","m","Skim the Maths formula sheet",30),T("s","s","Skim the Stats formula sheet",30),T("e","e","Read the mistake notebook once",30),T("pack","exam","Pack hall ticket, ID and everything the hall ticket asks for",15)],"No new topics today. Early night."),
+    R("light","Day before the exam",[T("ct","ct","Mock 3 fixes, then skim your CT summary",60),T("m","m","Skim the Maths formula sheet",30),T("s","s","Skim the Stats formula sheet",30),T("e","e","Read the mistake notebook once",30),T("pack","exam","Pack hall ticket, ID and everything the hall ticket asks for",15)],"No new topics today. Early night."),
     R("exam","Qualifier exam",[T("wake","exam","Light breakfast, one calm look at your summary",20),T("go","exam","Reach the centre early with hall ticket and ID",30),T("exam","exam","Write the qualifier. You're ready.",240)],"Exam timing is on your hall ticket. Follow its instructions.")
   ];
   rev.forEach(r=>{r.date=new Date(d);DAYS.push(r);d.setDate(d.getDate()+1)});
@@ -833,8 +835,8 @@ const NUGGETS = [
 ];
 
 /* ======================= STORAGE + CLOUD SYNC ======================= */
-const BLANK = () => ({checks:{}, notes:{}, notebook:[], focus:[], todos:{}, asg:[], timer:null, meta:{level:null,badges:{}}, updatedAt:0});
-function normalise(x){const o=Object.assign(BLANK(),x||{});o.meta=Object.assign({level:null,badges:{}},o.meta||{});o.todos=o.todos||{};o.asg=o.asg||[];return o}
+const BLANK = () => ({checks:{}, skips:{}, notes:{}, notebook:[], focus:[], todos:{}, asg:[], timer:null, meta:{level:null,badges:{}}, updatedAt:0});
+function normalise(x){const o=Object.assign(BLANK(),x||{});o.meta=Object.assign({level:null,badges:{}},o.meta||{});o.todos=o.todos||{};o.asg=o.asg||[];o.skips=o.skips||{};return o}
 let S = BLANK();
 try{ const raw=localStorage.getItem(STORE); if(raw) S=normalise(JSON.parse(raw)); }catch(e){}
 let syncT=null, retryT=null, dirty=false, pulled=!SYNC_URL;
@@ -904,6 +906,8 @@ function fmtDate(d,long){return d.toLocaleDateString("en-IN",long?{weekday:"long
 function fmtHM(hm){if(!hm)return "";let [h,m]=hm.split(":").map(Number);const ap=h>=12?"pm":"am";h=h%12||12;return h+":"+String(m).padStart(2,"0")+" "+ap}
 function fmtMins(m){const h=Math.floor(m/60),r=m%60;return h?(r?`${h} hr ${r} min`:`${h} hr`):`${r} min`}
 function isDone(k,id){return !!(S.checks[k]&&S.checks[k][id])}
+function isSkipped(k,id){return !!(S.skips[k]&&S.skips[k][id])}
+function backlog(){if(today0()<DAYS[0].date)return [];const ti=todayIdx(),out=[];for(let i=0;i<ti;i++){const d=DAYS[i],k=key(d.date);if(d.kind==="exam")continue;d.tasks.forEach(t=>{if(!isDone(k,t.id)&&!isSkipped(k,t.id))out.push({i,k,d,t})})}return out}
 function dayStats(i){const d=DAYS[i],k=key(d.date);let tot=0,dn=0,cnt=0;d.tasks.forEach(t=>{tot+=t.mins;if(isDone(k,t.id)){dn+=t.mins;cnt++}});return {tot,dn,cnt,n:d.tasks.length}}
 function doneMinutes(){let m=0;DAYS.forEach((d,i)=>m+=dayStats(i).dn);return m}
 function dayComplete(i){const st=dayStats(i);return st.n>0&&st.cnt===st.n}
@@ -1129,21 +1133,27 @@ function renderDay(){
   $("#prevDay").disabled=sel===0; $("#nextDay").disabled=sel===DAYS.length-1;
   $("#backToday").innerHTML = sel!==todayIdx()?`<button class="linkbtn" id="goToday">Back to today</button>`:"";
   if($("#goToday")) $("#goToday").onclick=()=>{sel=todayIdx();renderDay()};
-  $("#taskList").innerHTML = d.tasks.map(t=>{const done=isDone(k,t.id),sj=SUBJ[t.subj];return `
+  const row=(t,kk,from)=>{const done=isDone(kk,t.id),sj=SUBJ[t.subj];return `
     <div class="task${done?" isdone":""}" style="--c:${sj.c}">
-      <label><input type="checkbox" data-id="${t.id}" ${done?"checked":""} aria-label="${esc(sj.name+": "+t.label)}">
+      <label><input type="checkbox" data-k="${kk}" data-id="${t.id}" ${done?"checked":""} aria-label="${esc(sj.name+": "+t.label)}">
       <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke-width="3.2"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
-      <span><span class="subj">${sj.name}</span><br><span class="topic">${esc(t.label)}</span></span>
-      <span class="mins"><span>${fmtMins(t.mins)}</span><span class="xpchip">+${t.xp} XP</span></span></label>
-    </div>`}).join("");
+      <span>${from?`<span class="from">From ${from}</span><br>`:""}<span class="subj">${sj.name}</span><br><span class="topic">${esc(t.label)}</span></span>
+      <span class="mins"><span>${fmtMins(t.mins)}</span><span class="xpchip">+${t.xp} XP</span>${from?`<button class="skip" data-sk="${kk}" data-sid="${t.id}" aria-label="Skip ${esc(t.label)}">Skip</button>`:""}</span></label>
+    </div>`};
+  const bl=(sel===todayIdx()&&key(today0())===k)?backlog():[];
+  $("#catchUp").innerHTML=bl.length?`<div class="cu"><div class="cuh"><b>Catch up from earlier days (${bl.length})</b><span class="muted" style="font-size:.8rem">Tick to finish, or skip</span></div>${bl.map(b=>row(b.t,b.k,fmtDate(b.d.date))).join("")}</div>`:"";
+  $("#taskList").innerHTML = (bl.length?`<div class="groupl">Today</div>`:"")+d.tasks.map(t=>row(t,k)).join("");
   $("#dayNote").innerHTML = d.note?`<p class="muted" style="font-size:.9rem;margin:12px 0 0">${esc(d.note)}</p>`:"";
-  $("#taskList").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{
-    const id=e.target.dataset.id; S.checks[k]=S.checks[k]||{};
+  document.querySelectorAll("#taskList input, #catchUp input").forEach(inp=>inp.addEventListener("change",e=>{
+    const id=e.target.dataset.id, kk=e.target.dataset.k; S.checks[kk]=S.checks[kk]||{};
     const r=e.target.closest(".task").getBoundingClientRect();
-    if(e.target.checked){S.checks[k][id]=Date.now(); sparkle(r.left+30,r.top+r.height/2,8)} else delete S.checks[k][id];
+    if(e.target.checked){S.checks[kk][id]=Date.now(); sparkle(r.left+30,r.top+r.height/2,8)} else delete S.checks[kk][id];
     save(); refresh();
-    if(e.target.checked && dayComplete(sel)) toast("Whole day complete. +50 XP bonus!");
+    if(e.target.checked && kk===k && dayComplete(sel)) toast("Whole day complete. +50 XP bonus!");
+    else if(e.target.checked && kk!==k) toast("Caught up. Nice one.");
   }));
+  document.querySelectorAll("#catchUp .skip").forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();
+    const kk=b.dataset.sk;S.skips[kk]=S.skips[kk]||{};S.skips[kk][b.dataset.sid]=true;save();refresh();toast("Skipped. It won't show here again.")});
   const st=dayStats(sel);
   $("#dayBar").style.width=(st.tot?st.dn/st.tot*100:0)+"%";
   $("#dayFrac").textContent=`${st.cnt} of ${st.n} done`;
