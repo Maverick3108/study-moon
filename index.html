@@ -748,7 +748,7 @@ const SUNMINS=[60,60,60,60];
 const DAYS = [];
 (function(){
   let d = new Date(2026,9,10);
-  for(let w=1; w<=4; w++){
+  for(let w=2; w<=4; w++){
     let li=0;
     for(let k=0;k<7;k++){
       const wd=d.getDay(); let day;
@@ -770,14 +770,21 @@ const DAYS = [];
   const R=(kind,phase,tasks,note)=>({kind,phase,tasks,note,week:"R"});
   const MOCK=n=>R("mock",`Mock test ${n}`,[T("mock","mock",`Mock ${n}: full timed paper, all four subjects`,240),T("anl","mock","Check answers and log every mistake in the notebook",60)]);
   const rev=[
-    R("rev","Revise Weeks 1 and 2",iitm("Revise Weeks 1 and 2 CT","Revise Weeks 1 and 2 Maths","Revise Weeks 1 and 2 Stats","Revise Weeks 1 and 2 English")),
-    R("rev","Revise Weeks 3 and 4",iitm("Revise Weeks 3 and 4 CT","Revise Weeks 3 and 4 Maths","Revise Weeks 3 and 4 Stats","Revise Weeks 3 and 4 English")),
+    R("rev","Revise Week 1",iitm("Revise Week 1 CT: variables, iterators, filtering, flowcharts","Revise Week 1 Maths: set theory","Revise Week 1 Stats: types of data and scales","Revise Week 1 English: sounds and words")),
+    R("sunday","Sunday: Week 1 practice",iitm("Week 1 CT practice questions","Week 1 Maths practice questions","Week 1 Stats practice questions","Week 1 English practice questions")),
+    R("rev","Revise Week 2",iitm("Revise Week 2 CT","Revise Week 2 Maths","Revise Week 2 Stats","Revise Week 2 English")),
+    R("rev","Revise Week 3",iitm("Revise Week 3 CT","Revise Week 3 Maths","Revise Week 3 Stats","Revise Week 3 English")),
+    R("rev","Revise Week 4",iitm("Revise Week 4 CT","Revise Week 4 Maths","Revise Week 4 Stats","Revise Week 4 English")),
     MOCK(1),
-    R("rev","Mock 1 fixes and past papers",iitm("Fix CT mistakes from Mock 1; pseudocode tracing drill","Fix Maths mistakes; previous year questions","Fix Stats mistakes; previous year questions","Fix English mistakes; previous year questions")),
+    R("rev","Mock 1 fixes",iitm("Fix CT mistakes from Mock 1","Fix Maths mistakes from Mock 1","Fix Stats mistakes from Mock 1","Fix English mistakes from Mock 1")),
+    R("rev","CT drill and past papers",iitm("Pseudocode tracing drill across all four weeks","Maths previous year questions","Stats previous year questions","English previous year questions")),
+    R("sunday","Sunday: formula sheets",iitm("One page CT summary, first draft","Formula sheet: Maths weeks 1 to 4","Formula sheet: Stats weeks 1 to 4","Read through the mistake notebook")),
     MOCK(2),
-    R("rev","Mock 2 fixes and weak topics",iitm("Fix CT mistakes from Mock 2; nested loops and procedures again","Fix Maths mistakes; formula sheet","Fix Stats mistakes; formula sheet","Pronunciation and grammar rules")),
+    R("rev","Mock 2 fixes",iitm("Fix CT mistakes from Mock 2","Fix Maths mistakes from Mock 2","Fix Stats mistakes from Mock 2","Fix English mistakes from Mock 2")),
+    R("rev","Weak topics",iitm("Hardest CT topics again: nested loops, procedures","Hardest Maths topics","Hardest Stats topics","Pronunciation and grammar rules")),
     MOCK(3),
-    R("light","Day before the exam",[T("ct","ct","Mock 3 fixes, then skim your CT summary",60),T("m","m","Skim the Maths formula sheet",30),T("s","s","Skim the Stats formula sheet",30),T("e","e","Read the mistake notebook once",30),T("pack","exam","Pack hall ticket, ID and everything the hall ticket asks for",15)],"No new topics today. Early night."),
+    R("taper","Final polish",iitm("Mock 3 fixes; finish the one page CT summary","Maths formula sheet only","Stats formula sheet only","Mistake notebook only"),"Keep today light so you arrive rested."),
+    R("light","Day before the exam",[T("ct","ct","Skim your one page CT summary",30),T("m","m","Skim the Maths formula sheet",30),T("s","s","Skim the Stats formula sheet",30),T("e","e","Read the mistake notebook once",30),T("pack","exam","Pack hall ticket, ID and everything the hall ticket asks for",15)],"No new topics today. Early night."),
     R("exam","Qualifier exam",[T("wake","exam","Light breakfast, one calm look at your summary",20),T("go","exam","Reach the centre early with hall ticket and ID",30),T("exam","exam","Write the qualifier. You're ready.",240)],"Exam timing is on your hall ticket. Follow its instructions.")
   ];
   rev.forEach(r=>{r.date=new Date(d);DAYS.push(r);d.setDate(d.getDate()+1)});
@@ -1111,7 +1118,7 @@ function renderHero(){
   $("#hello").textContent=`${greet}, ${NAME}.`;
   const t0=today0(), days=Math.round((EXAM-t0)/864e5);
   let html;
-  if(t0<DAYS[0].date){const s=Math.round((DAYS[0].date-t0)/864e5);html=`${s} ${s===1?"day":"days"}<span>until Week 1 begins on ${fmtDate(DAYS[0].date,true)}</span>`}
+  if(t0<DAYS[0].date){const s=Math.round((DAYS[0].date-t0)/864e5);html=`${s} ${s===1?"day":"days"}<span>until Week 2 begins on ${fmtDate(DAYS[0].date,true)}</span>`}
   else if(days>1) html=`${days} days<span>to your qualifier on Sunday, 15 November</span>`;
   else if(days===1) html=`Tomorrow<span>is the qualifier. You're ready.</span>`;
   else if(days===0) html=`Today<span>is the day. Go shine.</span>`;
@@ -1214,6 +1221,8 @@ function renderPlan(){
   const ti=todayIdx(), started=today0()>=DAYS[0].date;
   $("#weeks").innerHTML=groups.map(([g,fn])=>{
     const idx=DAYS.map((d,i)=>[d,i]).filter(([d])=>fn(d));
+    const syl=wn=>`<div class="syl">${["m","s","ct","e"].map(k=>`<div style="--c:${SUBJ[k].c}"><b>${SUBJ[k].name}</b>${esc(WEEK_SYL[wn][k])}</div>`).join("")}</div>`;
+    if(!idx.length) return g==="Week 1"?`<div class="week panel"><h3>Week 1 🏅</h3>${syl(1)}<p class="muted" style="font-size:.9rem;margin:0">Done before the tracker started. It comes back for a full revision on 31 October.</p></div>`:"";
     const cleared=idx.every(([d,i])=>dayComplete(i));
     const rows=idx.map(([d,i])=>{
       const st=dayStats(i),f=st.tot?st.dn/st.tot:0;
@@ -1221,7 +1230,7 @@ function renderPlan(){
         <span class="d">${d.date.getDate()} ${d.date.toLocaleDateString("en-IN",{month:"short"})}<small>${d.date.toLocaleDateString("en-IN",{weekday:"short"})}</small></span>
         <span class="ph"><span class="chip" style="background:${KIND[d.kind].c}"></span>${esc(d.phase)}<span class="tlines">${d.tasks.map(t=>`<span class="${isDone(key(d.date),t.id)?"dn":""}" style="--c:${SUBJ[t.subj].c}"><b>${SUBJ[t.subj].short}</b>${esc(t.label)}</span>`).join("")}</span></span>
         ${f>=1?`<span style="font-size:1.5rem" aria-label="Complete">🌕</span>`:ringSvg(f,"var(--ct)")}</button>`}).join("");
-    const wn=idx[0][0].week, sy=typeof wn==="number"?`<div class="syl">${["m","s","ct","e"].map(k=>`<div style="--c:${SUBJ[k].c}"><b>${SUBJ[k].name}</b>${esc(WEEK_SYL[wn][k])}</div>`).join("")}</div>`:"";
+    const wn=idx[0][0].week, sy=typeof wn==="number"?syl(wn):"";
     return `<div class="week panel"><h3>${g}${cleared?" 🏅":""}</h3>${sy}${rows}</div>`;
   }).join("");
   $("#weeks").querySelectorAll(".drow").forEach(b=>b.onclick=()=>{sel=+b.dataset.i;show("today");renderDay();window.scrollTo({top:0})});
